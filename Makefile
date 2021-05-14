@@ -23,6 +23,12 @@ endif
 # The details of the application:
 binary:=rhoas
 
+<<<<<<< HEAD
+=======
+kasapi_dir=./pkg/api/kas/client
+decisapi_dir=./pkg/api/decis/client
+strimzi_admin_api_dir=./pkg/api/strimzi-admin/client
+>>>>>>> 6888340 (feat: init decision api)
 amsapi_dir=./pkg/api/ams/amsclient
 
 # Enable Go modules:
@@ -73,7 +79,7 @@ test/integration: install
 
 # Runs the integration tests.
 test/unit: install
-	go test ./pkg/...
+	go test -count=1 ./pkg/...
 .PHONY: test/unit
 
 openapi/ams/generate:

@@ -5,6 +5,8 @@ import (
 	"errors"
 
 	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
+	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
 	"github.com/redhat-developer/app-services-cli/pkg/api"
@@ -30,7 +32,7 @@ func NewConfigMock(cfg *config.Config) config.IConfig {
 	}
 }
 
-func NewConnectionMock(conn *connection.KeycloakConnection, apiClient *kafkamgmtclient.APIClient) connection.Connection {
+func NewConnectionMock(conn *connection.KeycloakConnection, apiClient *kafkamgmtclient.APIClient, decisClient *decisclient.APIClient) connection.Connection {
 	return &connection.ConnectionMock{
 		RefreshTokensFunc: func(ctx context.Context) error {
 			if conn.Token.AccessToken == "" && conn.Token.RefreshToken == "" {
@@ -70,6 +72,8 @@ func NewConnectionMock(conn *connection.KeycloakConnection, apiClient *kafkamgmt
 			a := &api.API{
 				Kafka: func() kafkamgmtclient.DefaultApi {
 					return apiClient.DefaultApi
+				Decision: func() decisclient.DefaultApi {
+					return decisClient.DefaultApi
 				},
 			}
 

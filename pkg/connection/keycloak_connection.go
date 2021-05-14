@@ -21,6 +21,8 @@ import (
 	"github.com/redhat-developer/app-services-cli/internal/config"
 	"github.com/redhat-developer/app-services-cli/pkg/api/kas"
 
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
+
 	"github.com/redhat-developer/app-services-cli/pkg/api"
 
 	"github.com/redhat-developer/app-services-cli/pkg/logging"
@@ -174,6 +176,18 @@ func (c *KeycloakConnection) API() *api.API {
 
 		return apiClient.SecurityApi
 	}
+	decisionAPIFunc := func() decisclient.DefaultApi {
+		if cachedDecisionServiceAPI != nil {
+			return cachedDecisionServiceAPI
+		}
+
+		// create the client
+		decisionAPIClient := c.createDecisionAPIClient()
+
+		cachedDecisionServiceAPI = decisionAPIClient.DefaultApi
+
+		return cachedDecisionServiceAPI
+	}
 
 	kafkaAdminAPIFunc := func(kafkaID string) (kafkainstanceclient.DefaultApi, *kafkamgmtclient.KafkaRequest, error) {
 		api := kafkaAPIFunc()
@@ -211,6 +225,7 @@ func (c *KeycloakConnection) API() *api.API {
 		ServiceAccount: serviceAccountAPIFunc,
 		KafkaAdmin:     kafkaAdminAPIFunc,
 		AccountMgmt:    amsAPIFunc,
+		Decision:       decisionAPIFunc,
 	}
 }
 
@@ -224,6 +239,22 @@ func (c *KeycloakConnection) createKafkaAPIClient() *kafkamgmtclient.APIClient {
 	})
 
 	return client
+}
+
+// Create a new Kafka API client
+func (c *KeycloakConnection) createDecisionAPIClient() *decisclient.APIClient {
+	cfg := decisclient.NewConfiguration()
+
+	cfg.Scheme = c.apiURL.Scheme
+	cfg.Host = c.apiURL.Host
+
+	cfg.HTTPClient = c.defaultHTTPClient
+
+	cfg.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %v", c.Token.AccessToken))
+
+	apiClient := decisclient.NewAPIClient(cfg)
+
+	return apiClient
 }
 
 // Create a new KafkaAdmin API client

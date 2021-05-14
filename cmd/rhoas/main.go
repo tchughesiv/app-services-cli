@@ -7,20 +7,17 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/redhat-developer/app-services-cli/pkg/api/kas"
-	"github.com/redhat-developer/app-services-cli/pkg/doc"
-	"github.com/redhat-developer/app-services-cli/pkg/dump"
-	"github.com/redhat-developer/app-services-cli/pkg/localize/goi18n"
-
-	"github.com/redhat-developer/app-services-cli/pkg/cmdutil"
-
 	"github.com/redhat-developer/app-services-cli/internal/build"
-
 	"github.com/redhat-developer/app-services-cli/internal/config"
-
+	"github.com/redhat-developer/app-services-cli/pkg/api/decis"
+	"github.com/redhat-developer/app-services-cli/pkg/api/kas"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/debug"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/factory"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/root"
+	"github.com/redhat-developer/app-services-cli/pkg/cmdutil"
+	"github.com/redhat-developer/app-services-cli/pkg/doc"
+	"github.com/redhat-developer/app-services-cli/pkg/dump"
+	"github.com/redhat-developer/app-services-cli/pkg/localize/goi18n"
 	"github.com/spf13/cobra"
 )
 
@@ -63,6 +60,15 @@ func main() {
 	}
 
 	if e, ok := kas.GetAPIError(err); ok {
+		logger.Error("Error:", e.GetReason())
+		if debug.Enabled() {
+			errJSON, _ := json.Marshal(e)
+			_ = dump.JSON(cmdFactory.IOStreams.ErrOut, errJSON)
+		}
+		os.Exit(1)
+	}
+
+	if e, ok := decis.GetAPIError(err); ok {
 		logger.Error("Error:", e.GetReason())
 		if debug.Enabled() {
 			errJSON, _ := json.Marshal(e)

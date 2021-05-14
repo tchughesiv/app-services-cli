@@ -73,7 +73,7 @@ func TestNewLogoutCommand(t *testing.T) {
 			factory := &factory.Factory{
 				Config: mockutil.NewConfigMock(tt.args.cfg),
 				Connection: func(connectionCfg *connection.Config) (connection.Connection, error) {
-					return mockutil.NewConnectionMock(tt.args.connection, nil), nil
+					return mockutil.NewConnectionMock(tt.args.connection, nil, nil), nil
 				},
 				Localizer: localizer,
 				Logger: func() (logging.Logger, error) {

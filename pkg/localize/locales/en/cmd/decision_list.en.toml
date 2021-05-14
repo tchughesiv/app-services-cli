@@ -1,0 +1,49 @@
+[decision.list.cmd.use]
+description = "Use is the one-line usage message"
+one = "list"
+
+[decision.list.cmd.shortDescription]
+description = "Short description for command"
+one = "List all Decision instances"
+
+[decision.list.cmd.longDescription]
+description = "Long description for command"
+one = '''
+List all Decision instances.
+
+This command will provide a high level view of all Decision instances.
+The fields displayed are: ID, Name, Version, Status.
+Use the describe command to view all fields for a specific instance.
+
+The instances are displayed by default in a table, but can also be displayed as JSON or YAML.
+'''
+
+[decision.list.cmd.example]
+description = 'Examples of how to use the command'
+one = '''
+# list all Decision instances using the default output format
+$ rhoas decision list
+
+# list all Decision instances using JSON as the output format
+$ rhoas decision list -o json
+'''
+
+[decision.list.flag.id]
+description = 'Description for the --id flag'
+one = 'Unique ID of the Decisioninstance you want to list. If not set, the current Decisioninstance will be used.'
+
+[decision.list.flag.page]
+description = 'Description for the --page flag'
+one = 'Display the Decision instances from the specified page number.'
+
+[decision.list.flag.limit]
+description = 'Description for the --limit flag'
+one = 'The maximum number of Decision instances to be returned'
+
+[decision.list.flag.search]
+description = 'Description for the --search flag'
+one = 'Text search to filter the Decision instances by name, version and status'
+
+[decision.list.log.debug.filteringDecisionList]
+description = 'Debug message when filtering the list of Decision instances'
+one = 'Filtering Decision instances with the query "{{.Search}}"'

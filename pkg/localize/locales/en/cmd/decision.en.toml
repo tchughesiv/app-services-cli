@@ -1,0 +1,7 @@
+[decision.cmd.use]
+description = "Use is the one-line usage message"
+one = "decision"
+
+[decision.cmd.shortDescription]
+description = "Short description for command"
+one = "Create, view, use, and manage your Decision instances"

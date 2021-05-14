@@ -1,0 +1,30 @@
+[decision.validation.error.invalidName]
+one = '''
+Invalid Decision instance name. Valid names must satisfy the following conditions:
+
+  - must be between 1 and 32 characters
+  - must only consist of lower case, alphanumeric characters and '-'
+  - must start with an alphabetic character
+  - must end with an alphanumeric character
+'''
+
+[decision.validation.name.error.lengthError]
+one = 'Decision instance name must be between 1 and 32 characters'
+
+[decision.validation.error.invalidSearchValue]
+description = 'Error message when invalid search input is provided'
+one = '''
+illegal search value "{{.Search}}", search input must satisfy the following conditions:
+
+  - must be of 1 or more characters
+  - must only consist of alphanumeric characters, '-', '_' and '%'
+'''
+
+[decision.common.error.notFoundByIdError]
+one = 'Decision instance with ID "{{.ID}}" not found'
+
+[decision.common.error.notFoundByNameError]
+one = 'Decision instance "{{.Name}}" not found'
+
+[decision.common.error.notReadyError]
+one = 'Decision instance "{{.Name}}" is not ready yet'
