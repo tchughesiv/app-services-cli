@@ -1,0 +1,39 @@
+[decision.use.cmd.use]
+description = "Use is the one-line usage message"
+one = "use"
+
+[decision.use.cmd.shortDescription]
+description = "Short description for command"
+one = "Set the current Decision instance"
+
+[decision.use.cmd.longDescription]
+description = "Long description for command"
+one = '''
+Select an Decision instance and set it as the current instance.
+
+When you set the Decision instance to be used, it is set as the current instance for all "rhoas decision" commands.
+
+When an ID is not specified in other Decision commands, the current Decision instance is used.
+'''
+
+[decision.use.cmd.example]
+description = 'Examples of how to use the command'
+one = '''
+# set a decision instance to be the current instance
+$ rhoas decision use --id=1iSY6RQ3JKI8Q0OTmjQFd3ocFRg,
+'''
+
+[decision.use.flag.id]
+description = 'Description for the --id flag'
+one = 'Unique ID of the Decision instance you want to set as the current instance.'
+
+[decision.use.error.saveError]
+description = 'Error message when current Decision could not be saved in config'
+one = 'could not set "{{.Name}}" as the current Decision instance'
+
+[decision.use.error.idOrNameRequired]
+one= '--id flag or name required when not running interactively'
+
+[decision.use.log.info.useSuccess]
+description = 'Info message when current Decision was set' 
+one = 'Decision instance "{{.Name}}" has been set as the current instance.'

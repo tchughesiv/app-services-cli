@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/redhat-developer/app-services-cli/pkg/api/ams/amsclient"
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
 	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 	strimziadminclient "github.com/redhat-developer/app-services-cli/pkg/api/strimzi-admin/client"
 )
@@ -11,4 +12,5 @@ type API struct {
 	Kafka       func() kasclient.DefaultApi
 	TopicAdmin  func(kafkaID string) (strimziadminclient.DefaultApi, *kasclient.KafkaRequest, error)
 	AccountMgmt func() amsclient.DefaultApi
+	Decision    func() decisclient.DefaultApi
 }

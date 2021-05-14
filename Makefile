@@ -24,6 +24,7 @@ endif
 binary:=rhoas
 
 kasapi_dir=./pkg/api/kas/client
+decisapi_dir=./pkg/api/decis/client
 strimzi_admin_api_dir=./pkg/api/strimzi-admin/client
 amsapi_dir=./pkg/api/ams/amsclient
 
@@ -75,16 +76,16 @@ test/integration: install
 
 # Runs the integration tests.
 test/unit: install
-	go test ./pkg/...
+	go test -count=1 ./pkg/...
 .PHONY: test/unit
 
 openapi/pull: openapi/strimzi-admin/pull openapi/kas/pull
 .PHONY: openapi/pull
 
-openapi/validate: openapi/strimzi-admin/validate openapi/kas/validate
+openapi/validate: openapi/strimzi-admin/validate openapi/kas/validate openapi/decis/validate
 .PHONY: openapi/validate
 
-openapi/generate: openapi/strimzi-admin/generate openapi/kas/generate
+openapi/generate: openapi/strimzi-admin/generate openapi/kas/generate openapi/decis/generate
 .PHONY: openapi/validate
 
 openapi/strimzi-admin/pull:
@@ -129,6 +130,21 @@ openapi/kas/generate:
 	moq -out ${kasapi_dir}/default_api_mock.go ${kasapi_dir} DefaultApi
 	gofmt -w ${kasapi_dir}
 .PHONY: openapi/kas/generate
+
+# validate the openapi schema
+openapi/decis/validate:
+	openapi-generator-cli validate -i openapi/decision-service.yaml
+.PHONY: openapi/decis/validate
+
+# generate the openapi schema
+openapi/decis/generate:
+	rm -f ${decisapi_dir}/model_*.go
+	openapi-generator-cli generate -i openapi/decision-service.yaml -g go --package-name decisclient -p="generateInterfaces=true" --ignore-file-override=$$(pwd)/.openapi-generator-ignore -o ${decisapi_dir}
+	openapi-generator-cli validate -i openapi/decision-service.yaml
+	# generate mock
+	moq -out ${decisapi_dir}/default_api_mock.go ${decisapi_dir} DefaultApi
+	gofmt -w ${decisapi_dir}
+.PHONY: openapi/decis/generate
 
 mock-api/start: mock-api/client/start
 .PHONY: mock-api/start

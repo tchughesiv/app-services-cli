@@ -38,6 +38,10 @@ func FilterValidTopicNameArgs(f *factory.Factory, toComplete string) (validNames
 		return validNames, directive
 	}
 
+	if !cfg.HasDecision() {
+		return validNames, directive
+	}
+
 	conn, err := f.Connection(connection.DefaultConfigRequireMasAuth)
 	if err != nil {
 		return validNames, directive
@@ -77,6 +81,10 @@ func FilterValidConsumerGroupIDs(f *factory.Factory, toComplete string) (validID
 	}
 
 	if !cfg.HasKafka() {
+		return validIDs, directive
+	}
+
+	if !cfg.HasDecision() {
 		return validIDs, directive
 	}
 
@@ -130,6 +138,36 @@ func FilterValidKafkas(f *factory.Factory, toComplete string) (validNames []stri
 	items := kafkas.GetItems()
 	for _, kafka := range items {
 		validNames = append(validNames, kafka.GetName())
+	}
+
+	return validNames, directive
+}
+
+// FilterValidDecisionNames filters Decisions by name from the API and returns the names
+// This is used in the cobra.ValidArgsFunction for dynamic completion of topic names
+func FilterValidDecisions(f *factory.Factory, toComplete string) (validNames []string, directive cobra.ShellCompDirective) {
+	validNames = []string{}
+	directive = cobra.ShellCompDirectiveNoSpace
+
+	conn, err := f.Connection(connection.DefaultConfigSkipMasAuth)
+	if err != nil {
+		return validNames, directive
+	}
+
+	req := conn.API().Decision().ListDecisions(context.Background())
+	if toComplete != "" {
+		searchQ := "name like " + toComplete + "%"
+		req = req.Search(searchQ)
+	}
+	decisions, _, err := req.Execute()
+
+	if err != nil {
+		return validNames, directive
+	}
+
+	items := decisions.GetItems()
+	for _, decision := range items {
+		validNames = append(validNames, decision.GetName())
 	}
 
 	return validNames, directive

@@ -8,20 +8,23 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/redhat-developer/app-services-cli/pkg/connection"
-	"github.com/redhat-developer/app-services-cli/pkg/kafka/kafkaerr"
-
 	"github.com/openconfig/goyang/pkg/indent"
 	"github.com/redhat-developer/app-services-cli/internal/config"
+	"github.com/redhat-developer/app-services-cli/pkg/api/decis"
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
 	kas "github.com/redhat-developer/app-services-cli/pkg/api/kas"
 	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
+	"github.com/redhat-developer/app-services-cli/pkg/connection"
+	"github.com/redhat-developer/app-services-cli/pkg/decision/decisionerr"
+	"github.com/redhat-developer/app-services-cli/pkg/kafka/kafkaerr"
 	"github.com/redhat-developer/app-services-cli/pkg/logging"
 )
 
 const tagTitle = "title"
 
 type Status struct {
-	Kafka *KafkaStatus `json:"kafka,omitempty" title:"Kafka"`
+	Kafka    *KafkaStatus    `json:"kafka,omitempty" title:"Kafka"`
+	Decision *DecisionStatus `json:"decision,omitempty" title:"Decision"`
 }
 
 type KafkaStatus struct {
@@ -30,6 +33,13 @@ type KafkaStatus struct {
 	Status              string `json:"status,omitempty"`
 	BootstrapServerHost string `json:"bootstrap_server_host,omitempty" title:"Bootstrap URL"`
 	FailedReason        string `json:"failed_reason,omitempty" title:"Failed Reason"`
+}
+
+type DecisionStatus struct {
+	ID           string `json:"id,omitempty"`
+	Name         string `json:"name,omitempty"`
+	Status       string `json:"status,omitempty"`
+	FailedReason string `json:"failed_reason,omitempty" title:"Failed Reason"`
 }
 
 type Options struct {
@@ -72,6 +82,26 @@ func Get(ctx context.Context, opts *Options) (status *Status, ok bool, err error
 			}
 		} else {
 			logger.Debug("No Kafka instance is currently used, skipping status check")
+		}
+	}
+
+	if stringInSlice("decision", opts.Services) {
+		decisionCfg := cfg.Services.Decision
+		if cfg.HasDecision() {
+			// nolint:govet
+			decisionStatus, err := getDecisionStatus(ctx, api.Decision(), decisionCfg.ClusterID)
+			if err != nil {
+				if decis.IsErr(err, decis.ErrorNotFound) {
+					err = decisionerr.NotFoundByIDError(decisionCfg.ClusterID)
+					logger.Error(err)
+					logger.Info(`Run "rhoas decision use" to use another Decision instance.`)
+				}
+			} else {
+				status.Decision = decisionStatus
+				ok = true
+			}
+		} else {
+			logger.Debug("No Decision instance is currently used, skipping status check")
 		}
 	}
 
@@ -187,6 +217,28 @@ func getKafkaStatus(ctx context.Context, api kasclient.DefaultApi, id string) (s
 
 	if kafkaResponse.GetStatus() == "failed" {
 		status.FailedReason = kafkaResponse.GetFailedReason()
+	}
+
+	return status, err
+}
+
+func getDecisionStatus(ctx context.Context, api decisclient.DefaultApi, id string) (status *DecisionStatus, err error) {
+	decisionResponse, _, err := api.GetDecisionById(ctx, id).Execute()
+	if decis.IsErr(err, decis.ErrorNotFound) {
+		return nil, decisionerr.NotFoundByIDError(id)
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	status = &DecisionStatus{
+		ID:     decisionResponse.GetId(),
+		Name:   decisionResponse.GetName(),
+		Status: decisionResponse.GetStatus(),
+	}
+
+	if decisionResponse.GetStatus() == "failed" {
+		status.FailedReason = decisionResponse.GetStatusMessage()
 	}
 
 	return status, err
