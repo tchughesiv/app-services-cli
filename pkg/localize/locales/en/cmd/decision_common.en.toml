@@ -1,0 +1,31 @@
+[decision.common.error.couldNotUseDecision]
+description = 'Error message when a Decision instance could not be set to the current instance'
+one = 'could not set the current Decision instance: {{.ErrorMessage}}'
+
+[decision.common.error.noDecisionSelected]
+description = 'Error message when no Decision is set'
+one = 'no Decision instance is currently set, use the "--id" flag or set the current instance with the "rhoas decision use" command'
+
+[decision.common.flag.output.description]
+description = "Description for --output flag"
+one = 'Format in which to display the Decision instance. Choose from: "json", "yml", "yaml"'
+
+[decisions.common.flag.output.description]
+one = 'Format in which to display the Decision instances. Choose from: "json", "yml", "yaml"'
+
+[decision.common.error.idAndNameCannotBeUsed]
+one = 'name argument and --id flag cannot be used at the same time'
+
+[decision.common.error.couldNotFetchDecisions]
+description = 'Error message when list of Decision instances could not be fetched'
+one = 'unable to list Decision instances'
+
+[decision.common.input.instanceName.message]
+one = 'Select Decision instance to connect:'
+
+[decision.common.log.info.noDecisionInstances]
+description = 'Info message when no Decision instances were found'
+one = 'No Decision instances were found.'
+
+[decision.topic.common.error.topicNotFoundError]
+one = 'topic "{{.TopicName}}" does not exist in Decision instance "{{.InstanceName}}"'

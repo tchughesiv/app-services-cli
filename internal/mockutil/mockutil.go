@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
 	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
@@ -30,7 +31,7 @@ func NewConfigMock(cfg *config.Config) config.IConfig {
 	}
 }
 
-func NewConnectionMock(conn *connection.KeycloakConnection, apiClient *kasclient.APIClient) connection.Connection {
+func NewConnectionMock(conn *connection.KeycloakConnection, kasClient *kasclient.APIClient, decisClient *decisclient.APIClient) connection.Connection {
 	return &connection.ConnectionMock{
 		RefreshTokensFunc: func(ctx context.Context) error {
 			if conn.Token.AccessToken == "" && conn.Token.RefreshToken == "" {
@@ -69,7 +70,10 @@ func NewConnectionMock(conn *connection.KeycloakConnection, apiClient *kasclient
 		APIFunc: func() *api.API {
 			a := &api.API{
 				Kafka: func() kasclient.DefaultApi {
-					return apiClient.DefaultApi
+					return kasClient.DefaultApi
+				},
+				Decision: func() decisclient.DefaultApi {
+					return decisClient.DefaultApi
 				},
 			}
 

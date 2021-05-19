@@ -67,6 +67,10 @@ Runs integration tests
 - The CLI communicates with the Kafka Service Fleet Manager (KAS) API. For this there is a generated API client in `./pkg/api/kas/client`. 
 - The CLI uses the Strimzi API for topic management. The client is located in `./pkg/api/strimzi-admin/client`
 
+## Decision Service Fleet Manager API (DECIS)
+
+- The CLI communicates with the Decision Service Fleet Manager (DECIS) API. For this there is a generated API client in `./pkg/api/decis/client`. 
+
 ### Updating the API client
 
 Please ensure you have the latest generated version. Follow the steps below to update all API clients.
@@ -101,7 +105,7 @@ Starts the mock KAS Fleet Manager API and Kafka Admin API at [`http://localhost:
 To log in to the mock API, run `rhoas login against the local server` with your authentication token:
 
 ```shell
-rhoas login --url http://localhost:8000
+rhoas login --api-gateway=http://localhost:8000
 ```
 
 If you don't have an authentication token, you can still use a faked one, provided it has the correct payload:

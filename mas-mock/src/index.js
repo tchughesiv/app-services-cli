@@ -1,6 +1,7 @@
 const OpenAPIBackend = require("openapi-backend").default;
 const express = require("express");
 const kafkaHandlers = require("./handlers/kas-fleet-manager");
+const decisionHandlers = require("./handlers/decis-fleet-manager");
 const topicHandlers = require("./handlers/kafka-admin");
 const path = require('path');
 var cors = require('cors');
@@ -10,10 +11,12 @@ api.use(express.json());
 
 // define api
 const kafkaAPI = new OpenAPIBackend({ definition: path.join(__dirname, "../../openapi/kafka-service.yaml") });
+const decisionAPI = new OpenAPIBackend({ definition: path.join(__dirname, "../../openapi/decision-service.yaml") });
 const topicAPI = new OpenAPIBackend({ definition: path.join(__dirname, "../../openapi/strimzi-admin.yaml") });
 
 // register handlers
 kafkaAPI.register(kafkaHandlers);
+decisionAPI.register(decisionHandlers);
 topicAPI.register(topicHandlers);
 
 // register security handler
@@ -28,17 +31,24 @@ kafkaAPI.registerSecurityHandler("Bearer", (c, req, res) => {
   // return jwt.verify(token, 'secret');
 });
 
+decisionAPI.registerSecurityHandler("Bearer", (c, req, res) => {
+  return true;
+});
+
 // Skipping validation of the schema
 // validation fails on this schema definition
 // even though it is valid through other validation forms like Swagger.io
 topicAPI.validateDefinition = () => { }
 
 kafkaAPI.init();
+decisionAPI.init();
 topicAPI.init();
 
 api.use((req, res) => {
   if (req.url.startsWith("/api/managed-services-api/v1")) {
     return kafkaAPI.handleRequest(req, req, res)
+  } else if (req.url.startsWith("/api/daas-api/v1")) {
+    return decisionAPI.handleRequest(req, req, res)
   } else if (req.url.startsWith("/rest")) {
     req.url = req.url.replace("/rest", "");
     return topicAPI.handleRequest(req, req, res);
@@ -46,4 +56,4 @@ api.use((req, res) => {
   res.status(405).status({err: "Method not allowed"})
 })
 
-api.listen(8000, () => console.info("Kafka Service API listening at http://localhost:8000"))
+api.listen(8000, () => console.info("Service API listening at http://localhost:8000"))

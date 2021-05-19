@@ -14,6 +14,7 @@ import (
 	"github.com/redhat-developer/app-services-cli/internal/config"
 	"github.com/redhat-developer/app-services-cli/pkg/api/kas"
 
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
 	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 	strimziadminclient "github.com/redhat-developer/app-services-cli/pkg/api/strimzi-admin/client"
 
@@ -157,6 +158,7 @@ func (c *KeycloakConnection) API() *api.API {
 	var cachedKafkaAdminAPI strimziadminclient.DefaultApi
 	var cachedKafkaRequest *kasclient.KafkaRequest
 	var cachedAmsAPI amsclient.DefaultApi
+	var cachedDecisionServiceAPI decisclient.DefaultApi
 	var cachedKafkaAdminErr error
 
 	amsAPIFunc := func() amsclient.DefaultApi {
@@ -182,6 +184,19 @@ func (c *KeycloakConnection) API() *api.API {
 		cachedKafkaServiceAPI = kafkaAPIClient.DefaultApi
 
 		return cachedKafkaServiceAPI
+	}
+
+	decisionAPIFunc := func() decisclient.DefaultApi {
+		if cachedDecisionServiceAPI != nil {
+			return cachedDecisionServiceAPI
+		}
+
+		// create the client
+		decisionAPIClient := c.createDecisionAPIClient()
+
+		cachedDecisionServiceAPI = decisionAPIClient.DefaultApi
+
+		return cachedDecisionServiceAPI
 	}
 
 	kafkaAdminAPIFunc := func(kafkaID string) (strimziadminclient.DefaultApi, *kasclient.KafkaRequest, error) {
@@ -244,6 +259,7 @@ func (c *KeycloakConnection) API() *api.API {
 		Kafka:       kafkaAPIFunc,
 		TopicAdmin:  kafkaAdminAPIFunc,
 		AccountMgmt: amsAPIFunc,
+		Decision:    decisionAPIFunc,
 	}
 }
 
@@ -259,6 +275,22 @@ func (c *KeycloakConnection) createKafkaAPIClient() *kasclient.APIClient {
 	cfg.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %v", c.Token.AccessToken))
 
 	apiClient := kasclient.NewAPIClient(cfg)
+
+	return apiClient
+}
+
+// Create a new Kafka API client
+func (c *KeycloakConnection) createDecisionAPIClient() *decisclient.APIClient {
+	cfg := decisclient.NewConfiguration()
+
+	cfg.Scheme = c.apiURL.Scheme
+	cfg.Host = c.apiURL.Host
+
+	cfg.HTTPClient = c.defaultHTTPClient
+
+	cfg.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %v", c.Token.AccessToken))
+
+	apiClient := decisclient.NewAPIClient(cfg)
 
 	return apiClient
 }

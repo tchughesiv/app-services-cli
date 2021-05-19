@@ -4,19 +4,19 @@ import (
 	"flag"
 
 	"github.com/redhat-developer/app-services-cli/internal/build"
-	"github.com/redhat-developer/app-services-cli/pkg/cmd/login"
-	"github.com/redhat-developer/app-services-cli/pkg/cmd/status"
-	"github.com/redhat-developer/app-services-cli/pkg/cmd/whoami"
-	"github.com/redhat-developer/app-services-cli/pkg/localize"
-
 	"github.com/redhat-developer/app-services-cli/pkg/arguments"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/cluster"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/completion"
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/decision"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/factory"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/kafka"
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/login"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/logout"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/serviceaccount"
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/status"
 	cliversion "github.com/redhat-developer/app-services-cli/pkg/cmd/version"
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/whoami"
+	"github.com/redhat-developer/app-services-cli/pkg/localize"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -48,6 +48,7 @@ func NewRootCommand(f *factory.Factory, version string) *cobra.Command {
 	cmd.AddCommand(login.NewLoginCmd(f))
 	cmd.AddCommand(logout.NewLogoutCommand(f))
 	cmd.AddCommand(kafka.NewKafkaCommand(f))
+	cmd.AddCommand(decision.NewDecisionCommand(f))
 	cmd.AddCommand(serviceaccount.NewServiceAccountCommand(f))
 	cmd.AddCommand(cluster.NewClusterCommand(f))
 	cmd.AddCommand(status.NewStatusCommand(f))
