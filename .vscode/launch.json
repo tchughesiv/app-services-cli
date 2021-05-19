@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "configurations": [
 
+
   
     {
       "name": "Login",
@@ -74,6 +75,19 @@
       "args": [
         "decision",
         "list"
+      ]
+    },
+    {
+      "name": "Create Decision",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/cmd/rhoas",
+      "env": {},
+      "args": [
+        "decision",
+        "create",
+        "test"
       ]
     },
     {

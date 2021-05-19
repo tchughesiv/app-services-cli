@@ -3,8 +3,6 @@ package list
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"strconv"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
 	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
@@ -25,7 +23,7 @@ import (
 type decisionRow struct {
 	ID      string `json:"id" header:"ID"`
 	Name    string `json:"name" header:"Name"`
-	Version string `json:"version" header:"Version"`
+	Version int    `json:"version" header:"Version"`
 	Status  string `json:"status" header:"Status"`
 	// Owner         string `json:"owner" header:"Owner"`
 	// CloudProvider string `json:"cloud_provider" header:"Cloud Provider"`
@@ -99,24 +97,27 @@ func runList(opts *options) error {
 	api := connection.API()
 
 	a := api.Decision().ListDecisions(context.Background())
-	a = a.Page(strconv.Itoa(opts.page))
-	a = a.Size(strconv.Itoa(opts.limit))
+	/*
+		a = a.Page(strconv.Itoa(opts.page))
+		a = a.Size(strconv.Itoa(opts.limit))
 
-	if opts.search != "" {
-		query := buildQuery(opts.search)
-		logger.Debug(opts.localizer.MustLocalize("decision.list.log.debug.filteringDecisionList", localize.NewEntry("Search", query)))
-		a = a.Search(query)
-	}
-
+		if opts.search != "" {
+			query := buildQuery(opts.search)
+			logger.Debug(opts.localizer.MustLocalize("decision.list.log.debug.filteringDecisionList", localize.NewEntry("Search", query)))
+			a = a.Search(query)
+		}
+	*/
 	response, _, err := a.Execute()
 	if err != nil {
 		return err
 	}
 
-	if response.Size == 0 && opts.outputFormat == "" {
-		logger.Info(opts.localizer.MustLocalize("decision.common.log.info.noDecisionInstances"))
-		return nil
-	}
+	/*
+		if response.Size == nil && opts.outputFormat == "" {
+			logger.Info(opts.localizer.MustLocalize("decision.common.log.info.noDecisionInstances"))
+			return nil
+		}
+	*/
 
 	switch opts.outputFormat {
 	case "json":
@@ -154,6 +155,7 @@ func mapResponseItemsToRows(decisions []decisclient.DecisionRequest) []decisionR
 	return rows
 }
 
+/*
 func buildQuery(search string) string {
 
 	queryString := fmt.Sprintf(
@@ -164,3 +166,4 @@ func buildQuery(search string) string {
 	return queryString
 
 }
+*/

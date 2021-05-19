@@ -10,23 +10,27 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/logging"
 )
 
+/*
 const (
 	queryLimit = "1000"
 )
+*/
 
 func InteractiveSelect(connection connection.Connection, logger logging.Logger) (*decisclient.DecisionRequest, error) {
 	api := connection.API()
 
-	response, _, err := api.Decision().ListDecisions(context.Background()).Size(queryLimit).Execute()
+	response, _, err := api.Decision().ListDecisions(context.Background()).Execute()
 
 	if err != nil {
 		return nil, fmt.Errorf("unable to list Decision instances: %w", err)
 	}
 
-	if response.Size == 0 {
-		logger.Info("No Decision instances were found.")
-		return nil, nil
-	}
+	/*
+		if response.Size == nil {
+			logger.Info("No Decision instances were found.")
+			return nil, nil
+		}
+	*/
 
 	decisions := []string{}
 	for index := 0; index < len(response.Items); index++ {

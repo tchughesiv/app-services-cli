@@ -5,6 +5,9 @@ package decision
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/decision/create"
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/decision/delete"
+	"github.com/redhat-developer/app-services-cli/pkg/cmd/decision/describe"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/decision/list"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/decision/use"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/factory"
@@ -19,9 +22,9 @@ func NewDecisionCommand(f *factory.Factory) *cobra.Command {
 
 	// add sub-commands
 	cmd.AddCommand(
-		//create.NewCreateCommand(f),
-		//describe.NewDescribeCommand(f),
-		//delete.NewDeleteCommand(f),
+		create.NewCreateCommand(f),
+		describe.NewDescribeCommand(f),
+		delete.NewDeleteCommand(f),
 		list.NewListCommand(f),
 		use.NewUseCommand(f),
 	)

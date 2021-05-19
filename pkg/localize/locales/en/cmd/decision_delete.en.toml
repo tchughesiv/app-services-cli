@@ -1,0 +1,54 @@
+[decision.delete.cmd.use]
+description = "Use is the one-line usage message"
+one = "delete"
+
+[decision.delete.cmd.shortDescription]
+description = "Short description for command"
+one = "Delete a Decision instance"
+
+[decision.delete.cmd.longDescription]
+description = "Long description for command"
+one = '''
+Permanently delete a Decision instance, including all topics.
+
+When this command is run, you will be asked to confirm the name of the instance you want to delete.
+Otherwise you can pass "--yes" to skip confirmation and forcibly delete the instance.
+'''
+
+[decision.delete.cmd.example]
+description = 'Examples of how to use the command'
+one = '''
+# delete the current Decision instance
+$ rhoas decision delete
+
+# delete a Decision instance with a specific ID
+$ rhoas decision delete --id=1iSY6RQ3JKI8Q0OTmjQFd3ocFRg
+'''
+
+[decision.delete.flag.id]
+description = 'Description for the --id flag'
+one = 'Unique ID of the Decision instance you want to delete. If not set, the current Decision instance will be used.'
+
+[decision.delete.flag.yes]
+description = 'Description for the --yes flag'
+one = 'Skip confirmation to forcibly delete this Decision instance.'
+
+[decision.delete.log.info.deleting]
+description = 'Info message when deleting Decision'
+one = 'Deleting Decision instance "{{.Name}}"'
+
+[decision.delete.input.confirmName.message]
+description = 'Input title for Decision name confirmation'
+one = 'Confirm the name of the instance you want to delete:'
+
+[decision.delete.log.info.incorrectNameConfirmation]
+description = 'Info message when user incorrectly confirms the name'
+one = 'The name you entered does not match the name of the Decision instance that you are trying to delete. Please check that it is correct and try again.'
+
+[decision.delete.log.debug.deletingDecision]
+description = 'Debug message when deleting Decision'
+one = 'Deleting Decision instance'
+
+[decision.delete.log.info.deleteSuccess]
+description = 'Info message when instance was deleted'
+one = 'Decision instance "{{.Name}}" has successfully been deleted'

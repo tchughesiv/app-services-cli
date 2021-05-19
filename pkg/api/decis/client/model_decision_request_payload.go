@@ -14,19 +14,29 @@ import (
 	"encoding/json"
 )
 
-// DecisionRequestPayload Schema for the request body sent to /decisions POST
+// DecisionRequestPayload struct for DecisionRequestPayload
 type DecisionRequestPayload struct {
+	Id   *string `json:"id,omitempty"`
+	Kind *string `json:"kind,omitempty"`
+	Href *string `json:"href,omitempty"`
 	// The name of the Decision cluster. It must consist of lower-case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumeric character, and can not be longer than 32 characters.
-	Name string `json:"name"`
+	Name          string                           `json:"name"`
+	Description   string                           `json:"description"`
+	Model         DecisionRequestPayloadAllOfModel `json:"model"`
+	Eventing      *DecisionRequestAllOfEventing    `json:"eventing,omitempty"`
+	Configuration *map[string]string               `json:"configuration,omitempty"`
+	Tags          *map[string]string               `json:"tags,omitempty"`
 }
 
 // NewDecisionRequestPayload instantiates a new DecisionRequestPayload object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDecisionRequestPayload(name string) *DecisionRequestPayload {
+func NewDecisionRequestPayload(name string, description string, model DecisionRequestPayloadAllOfModel) *DecisionRequestPayload {
 	this := DecisionRequestPayload{}
 	this.Name = name
+	this.Description = description
+	this.Model = model
 	return &this
 }
 
@@ -36,6 +46,102 @@ func NewDecisionRequestPayload(name string) *DecisionRequestPayload {
 func NewDecisionRequestPayloadWithDefaults() *DecisionRequestPayload {
 	this := DecisionRequestPayload{}
 	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *DecisionRequestPayload) GetId() string {
+	if o == nil || o.Id == nil {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetIdOk() (*string, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *DecisionRequestPayload) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *DecisionRequestPayload) SetId(v string) {
+	o.Id = &v
+}
+
+// GetKind returns the Kind field value if set, zero value otherwise.
+func (o *DecisionRequestPayload) GetKind() string {
+	if o == nil || o.Kind == nil {
+		var ret string
+		return ret
+	}
+	return *o.Kind
+}
+
+// GetKindOk returns a tuple with the Kind field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetKindOk() (*string, bool) {
+	if o == nil || o.Kind == nil {
+		return nil, false
+	}
+	return o.Kind, true
+}
+
+// HasKind returns a boolean if a field has been set.
+func (o *DecisionRequestPayload) HasKind() bool {
+	if o != nil && o.Kind != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetKind gets a reference to the given string and assigns it to the Kind field.
+func (o *DecisionRequestPayload) SetKind(v string) {
+	o.Kind = &v
+}
+
+// GetHref returns the Href field value if set, zero value otherwise.
+func (o *DecisionRequestPayload) GetHref() string {
+	if o == nil || o.Href == nil {
+		var ret string
+		return ret
+	}
+	return *o.Href
+}
+
+// GetHrefOk returns a tuple with the Href field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetHrefOk() (*string, bool) {
+	if o == nil || o.Href == nil {
+		return nil, false
+	}
+	return o.Href, true
+}
+
+// HasHref returns a boolean if a field has been set.
+func (o *DecisionRequestPayload) HasHref() bool {
+	if o != nil && o.Href != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetHref gets a reference to the given string and assigns it to the Href field.
+func (o *DecisionRequestPayload) SetHref(v string) {
+	o.Href = &v
 }
 
 // GetName returns the Name field value
@@ -62,10 +168,178 @@ func (o *DecisionRequestPayload) SetName(v string) {
 	o.Name = v
 }
 
+// GetDescription returns the Description field value
+func (o *DecisionRequestPayload) GetDescription() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetDescriptionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Description, true
+}
+
+// SetDescription sets field value
+func (o *DecisionRequestPayload) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetModel returns the Model field value
+func (o *DecisionRequestPayload) GetModel() DecisionRequestPayloadAllOfModel {
+	if o == nil {
+		var ret DecisionRequestPayloadAllOfModel
+		return ret
+	}
+
+	return o.Model
+}
+
+// GetModelOk returns a tuple with the Model field value
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetModelOk() (*DecisionRequestPayloadAllOfModel, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Model, true
+}
+
+// SetModel sets field value
+func (o *DecisionRequestPayload) SetModel(v DecisionRequestPayloadAllOfModel) {
+	o.Model = v
+}
+
+// GetEventing returns the Eventing field value if set, zero value otherwise.
+func (o *DecisionRequestPayload) GetEventing() DecisionRequestAllOfEventing {
+	if o == nil || o.Eventing == nil {
+		var ret DecisionRequestAllOfEventing
+		return ret
+	}
+	return *o.Eventing
+}
+
+// GetEventingOk returns a tuple with the Eventing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetEventingOk() (*DecisionRequestAllOfEventing, bool) {
+	if o == nil || o.Eventing == nil {
+		return nil, false
+	}
+	return o.Eventing, true
+}
+
+// HasEventing returns a boolean if a field has been set.
+func (o *DecisionRequestPayload) HasEventing() bool {
+	if o != nil && o.Eventing != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEventing gets a reference to the given DecisionRequestAllOfEventing and assigns it to the Eventing field.
+func (o *DecisionRequestPayload) SetEventing(v DecisionRequestAllOfEventing) {
+	o.Eventing = &v
+}
+
+// GetConfiguration returns the Configuration field value if set, zero value otherwise.
+func (o *DecisionRequestPayload) GetConfiguration() map[string]string {
+	if o == nil || o.Configuration == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Configuration
+}
+
+// GetConfigurationOk returns a tuple with the Configuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetConfigurationOk() (*map[string]string, bool) {
+	if o == nil || o.Configuration == nil {
+		return nil, false
+	}
+	return o.Configuration, true
+}
+
+// HasConfiguration returns a boolean if a field has been set.
+func (o *DecisionRequestPayload) HasConfiguration() bool {
+	if o != nil && o.Configuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConfiguration gets a reference to the given map[string]string and assigns it to the Configuration field.
+func (o *DecisionRequestPayload) SetConfiguration(v map[string]string) {
+	o.Configuration = &v
+}
+
+// GetTags returns the Tags field value if set, zero value otherwise.
+func (o *DecisionRequestPayload) GetTags() map[string]string {
+	if o == nil || o.Tags == nil {
+		var ret map[string]string
+		return ret
+	}
+	return *o.Tags
+}
+
+// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DecisionRequestPayload) GetTagsOk() (*map[string]string, bool) {
+	if o == nil || o.Tags == nil {
+		return nil, false
+	}
+	return o.Tags, true
+}
+
+// HasTags returns a boolean if a field has been set.
+func (o *DecisionRequestPayload) HasTags() bool {
+	if o != nil && o.Tags != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTags gets a reference to the given map[string]string and assigns it to the Tags field.
+func (o *DecisionRequestPayload) SetTags(v map[string]string) {
+	o.Tags = &v
+}
+
 func (o DecisionRequestPayload) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if o.Kind != nil {
+		toSerialize["kind"] = o.Kind
+	}
+	if o.Href != nil {
+		toSerialize["href"] = o.Href
+	}
 	if true {
 		toSerialize["name"] = o.Name
+	}
+	if true {
+		toSerialize["description"] = o.Description
+	}
+	if true {
+		toSerialize["model"] = o.Model
+	}
+	if o.Eventing != nil {
+		toSerialize["eventing"] = o.Eventing
+	}
+	if o.Configuration != nil {
+		toSerialize["configuration"] = o.Configuration
+	}
+	if o.Tags != nil {
+		toSerialize["tags"] = o.Tags
 	}
 	return json.Marshal(toSerialize)
 }

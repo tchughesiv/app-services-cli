@@ -47,7 +47,7 @@ topicAPI.init();
 api.use((req, res) => {
   if (req.url.startsWith("/api/managed-services-api/v1")) {
     return kafkaAPI.handleRequest(req, req, res)
-  } else if (req.url.startsWith("/api/daas-api/v1")) {
+  } else if (req.url.startsWith("/decisions")) {
     return decisionAPI.handleRequest(req, req, res)
   } else if (req.url.startsWith("/rest")) {
     req.url = req.url.replace("/rest", "");
