@@ -11,19 +11,24 @@ module.exports = {
   },
   createDecision: async (c, req, res) => {
     res.status(202).json({
-      id: "1iSY6RQ3JKI8Q0OTmjQFd3ocFRg",
-      kind: "decision",
-      href: "/api/daas-api/v1/decisions/1iSY6RQ3JKI8Q0OTmjQFd3ocFRg",
-      status: "complete",
-      cloud_provider: "aws",
-      multi_az: false,
-      region: "us-east-1",
-      owner: "api_decision_service",
-      name: "serviceapi",
-      bootstrapServerHost:
-        "serviceapi-1isy6rq3jki8q0otmjqfd3ocfrg.apps.ms-bttg0jn170hp.x5u8.s1.devshift.org",
-      created_at: "2020-10-05T12:51:24.053142Z",
-      updated_at: "2020-10-05T12:56:36.362208Z",
+      "kind": "Decision",
+      "id": "f5e155b9-e1f4-4768-a99e-fc04c5036f0a",
+      "version": "4",
+      "href": "/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4",
+      "name": "mock-decision",
+      "description": "A human readable description of my decision",
+      "model": {
+        "md5": "8eb41527a8f53e5d673771fa2159edac",
+        "href": "/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn"
+      },
+      "configuration": {
+        "key": "value"
+      },
+      "tags": {
+        "key": "value"
+      },
+      "status": "BUILDING",
+      "submitted_at": "2020-10-05T12:51:24.394919Z",
     });
   },
 
@@ -31,7 +36,7 @@ module.exports = {
     res.status(204).json({
       id: "1iSY6RQ3JKI8Q0OTmjQFd3ocFRg",
       kind: "decision",
-      href: "/api/daas-api/v1/decisions/1iSY6RQ3JKI8Q0OTmjQFd3ocFRg",
+      href: "/decisions/1iSY6RQ3JKI8Q0OTmjQFd3ocFRg",
       status: "complete",
       cloud_provider: "aws",
       multi_az: false,
@@ -50,12 +55,12 @@ module.exports = {
       "kind": "Decision",
       "id": "f5e155b9-e1f4-4768-a99e-fc04c5036f0a",
       "version": "4",
-      "href": "/api/daas-api/v1/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4",
+      "href": "/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4",
       "name": "mock-decision",
       "description": "A human readable description of my decision",
       "model": {
         "md5": "8eb41527a8f53e5d673771fa2159edac",
-        "href": "/api/daas-api/v1/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn"
+        "href": "/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn"
       },
       "configuration": {
         "key": "value"
@@ -65,7 +70,7 @@ module.exports = {
       },
       "status": "FAILED",
       "status_message": "Failed to deploy Decision.",
-      "submitted_at": "2020-10-05T12:51:24.053142Z",
+      "submitted_at": "2020-10-05T12:51:24.394919Z",
     });
   },
 
@@ -80,12 +85,12 @@ module.exports = {
           "kind": "Decision",
           "id": "f5e155b9-e1f4-4768-a99e-fc04c5036f0a",
           "version": "4",
-          "href": "/api/daas-api/v1/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4",
+          "href": "/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4",
           "name": "mock-decision",
           "description": "A human readable description of my decision",
           "model": {
             "md5": "8eb41527a8f53e5d673771fa2159edac",
-            "href": "/api/daas-api/v1/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn"
+            "href": "/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn"
           },
           "configuration": {
             "key": "value"
@@ -95,18 +100,18 @@ module.exports = {
           },
           "status": "FAILED",
           "status_message": "Failed to deploy Decision.",
-          "submitted_at": "2020-10-05T12:51:24.053142Z"
+          "submitted_at": "2021-05-06T08:01:04.394919Z"
         },
         {
           "kind": "Decision",
           "id": "aba2a420-2afe-456c-b126-073bff1a2023",
           "version": "1",
-          "href": "/api/daas-api/v1/decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1",
+          "href": "/decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1",
           "name": "mock-decision2",
           "description": "A human readable description of my decision",
           "model": {
             "md5": "8eb41527a8f53e5d673771fa2159edac",
-            "href": "/api/daas-api/v1/decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1/dmn"
+            "href": "/decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1/dmn"
           },
           "configuration": {
             "key": "value"
@@ -115,8 +120,9 @@ module.exports = {
             "key": "value"
           },
           "status": "BUILDING",
-          "submitted_at": "2020-10-05T12:52:44.053142Z"
-        },
+          "published_at": "2021-05-26T15:09:47.211147Z",
+          "submitted_at": "2021-05-25T15:09:47.211147Z"
+        }
       ]
     })
   },

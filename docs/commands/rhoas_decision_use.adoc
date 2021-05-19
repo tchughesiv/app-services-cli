@@ -6,7 +6,7 @@ Set the current Decision instance
 
 === Synopsis
 
-Select an Decision instance and set it as the current instance.
+Select a Decision instance and set it as the current instance.
 
 When you set the Decision instance to be used, it is set as the current instance for all "rhoas decision" commands.
 

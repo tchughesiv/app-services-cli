@@ -1,0 +1,51 @@
+== rhoas decision create
+
+ifdef::env-github,env-browser[:relfilesuffix: .adoc]
+
+Create a Decision instance
+
+=== Synopsis
+
+Create a Decision instance with a particular DMN and Description.
+
+After creating the instance you can view it by running "rhoas decision describe".
+
+
+....
+rhoas decision create [flags]
+....
+
+=== Examples
+
+....
+# start an interactive prompt to fill out the configuration values for the instance
+$ rhoas decision create
+
+# create a Decision instance
+$ rhoas decision create my-decision-instance
+
+# create a Decision instance and output the result in YAML
+$ rhoas decision create -o yaml
+
+....
+
+=== Options
+
+....
+      --descrip string   Decision Description
+      --dmn string       Decision DMN
+  -o, --output string    Format in which to display the Decision instance. Choose from: "json", "yml", "yaml" (default "json")
+      --use              Set the new Decision instance to the current instance (default true)
+....
+
+=== Options inherited from parent commands
+
+....
+  -d, --debug   Enable debug mode
+  -h, --help    Show help for a command
+....
+
+=== SEE ALSO
+
+* link:rhoas_decision{relfilesuffix}[rhoas decision]	 - Create, view, use, and manage your Decision instances
+

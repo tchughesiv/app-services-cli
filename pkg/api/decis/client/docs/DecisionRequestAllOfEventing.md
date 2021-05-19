@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Items** | Pointer to [**[]Eventing**](Eventing.md) |  | [optional] 
+**Kafka** | Pointer to [**DecisionRequestAllOfEventingKafka**](DecisionRequestAllOfEventingKafka.md) |  | [optional] 
 
 ## Methods
 
@@ -25,30 +25,30 @@ NewDecisionRequestAllOfEventingWithDefaults instantiates a new DecisionRequestAl
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetItems
+### GetKafka
 
-`func (o *DecisionRequestAllOfEventing) GetItems() []Eventing`
+`func (o *DecisionRequestAllOfEventing) GetKafka() DecisionRequestAllOfEventingKafka`
 
-GetItems returns the Items field if non-nil, zero value otherwise.
+GetKafka returns the Kafka field if non-nil, zero value otherwise.
 
-### GetItemsOk
+### GetKafkaOk
 
-`func (o *DecisionRequestAllOfEventing) GetItemsOk() (*[]Eventing, bool)`
+`func (o *DecisionRequestAllOfEventing) GetKafkaOk() (*DecisionRequestAllOfEventingKafka, bool)`
 
-GetItemsOk returns a tuple with the Items field if it's non-nil, zero value otherwise
+GetKafkaOk returns a tuple with the Kafka field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetItems
+### SetKafka
 
-`func (o *DecisionRequestAllOfEventing) SetItems(v []Eventing)`
+`func (o *DecisionRequestAllOfEventing) SetKafka(v DecisionRequestAllOfEventingKafka)`
 
-SetItems sets Items field to given value.
+SetKafka sets Kafka field to given value.
 
-### HasItems
+### HasKafka
 
-`func (o *DecisionRequestAllOfEventing) HasItems() bool`
+`func (o *DecisionRequestAllOfEventing) HasKafka() bool`
 
-HasItems returns a boolean if a field has been set.
+HasKafka returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

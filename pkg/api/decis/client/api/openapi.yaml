@@ -10,45 +10,11 @@ servers:
 - description: Staging server
   url: https://api.stage.openshift.com
 - description: localhost
-  url: http://localhost:8080
+  url: http://localhost:8000
 - description: current domain
   url: /
 paths:
-  /api/daas-api/v1:
-    get:
-      operationId: versionMetadata
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VersionMetadata'
-          description: Version metadata
-      summary: Retrieves the version metadata
-  /api/daas-api/v1/status:
-    get:
-      operationId: serviceStatus
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceStatus'
-          description: Ok
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: Retrieves the status of resources e.g whether we have reached maximum
-        service capacity
-  /api/daas-api/v1/decisions/{id}:
+  /decisions/{id}:
     delete:
       operationId: deleteDecisionById
       parameters:
@@ -185,95 +151,9 @@ paths:
       security:
       - Bearer: []
       summary: Get a decision request by id
-  /api/daas-api/v1/decisions:
+  /decisions:
     get:
       operationId: listDecisions
-      parameters:
-      - description: Page index
-        examples:
-          page:
-            value: "1"
-        explode: true
-        in: query
-        name: page
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Number of items in each page
-        examples:
-          size:
-            value: "100"
-        explode: true
-        in: query
-        name: size
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: |-
-          Specifies the order by criteria. The syntax of this parameter is
-          similar to the syntax of the _order by_ clause of an SQL statement.
-          Each query can be ordered by any of the decisionRequests fields.
-          For example, in order to retrieve all decisions ordered by their name:
-
-          ```sql
-          name asc
-          ```
-
-          Or in order to retrieve all decisions ordered by their name _and_ created date:
-
-          ```sql
-          name asc, created_at asc
-          ```
-
-          If the parameter isn't provided, or if the value is empty, then
-          the results will be ordered by name.
-        examples:
-          orderBy:
-            value: name asc
-        explode: true
-        in: query
-        name: orderBy
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: |
-          Search criteria.
-
-          The syntax of this parameter is similar to the syntax of the _where_ clause of an
-          SQL statement. Allowed fields in the search are: cloud_provider, name, owner, region and status. Allowed comparators are `<>`, `=` or `LIKE`.
-          Allowed joins are `AND` and `OR`, however there is a limit of max 10 joins in the search query.
-
-          Examples:
-
-          To retrieve decision request with name equal `my-decision` and region equal `aws`, the value should be:
-
-          ```
-          name = my-decision and cloud_provider = aws
-          ```
-
-          To retrieve decision request with its name starting with `my`, the value should be:
-
-          ```
-          name like my%25
-          ```
-
-          If the parameter isn't provided, or if the value is empty, then all the decisions
-          that the user has permission to see will be returned.
-
-          Note. If the query is invalid, an error will be returned
-        examples:
-          search:
-            value: name = my-decision and cloud_provider = aws
-        explode: true
-        in: query
-        name: search
-        required: false
-        schema:
-          type: string
-        style: form
       responses:
         "200":
           content:
@@ -414,340 +294,7 @@ paths:
       security:
       - Bearer: []
       summary: Create a new decision Request
-  /api/daas-api/v1/cloud_providers:
-    get:
-      operationId: listCloudProviders
-      parameters:
-      - description: Page index
-        examples:
-          page:
-            value: "1"
-        explode: true
-        in: query
-        name: page
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Number of items in each page
-        examples:
-          size:
-            value: "100"
-        explode: true
-        in: query
-        name: size
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CloudProviderList'
-          description: Retrieved list of supported cloud providers
-        "401":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/401Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Auth token is invalid
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: Retrieves the list of supported cloud providers.
-  /api/daas-api/v1/cloud_providers/{id}/regions:
-    get:
-      operationId: listCloudProviderRegions
-      parameters:
-      - description: The id of record
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: Page index
-        examples:
-          page:
-            value: "1"
-        explode: true
-        in: query
-        name: page
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: Number of items in each page
-        examples:
-          size:
-            value: "100"
-        explode: true
-        in: query
-        name: size
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CloudRegionList'
-          description: Retrieved list of supported cloud providers regions
-        "401":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/401Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Auth token is invalid
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: Retrieves the list of supported regions of the supported cloud provider.
-  /api/daas-api/v1/serviceaccounts:
-    get:
-      operationId: listServiceAccounts
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceAccountList'
-          description: List of service accounts
-        "401":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/401Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Auth token is invalid
-        "403":
-          content:
-            application/json:
-              examples:
-                "403Example":
-                  $ref: '#/components/examples/403Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: User not authorized to access the service
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: List service accounts
-    post:
-      operationId: createServiceAccount
-      requestBody:
-        content:
-          application/json:
-            examples:
-              sa:
-                $ref: '#/components/examples/ServiceAccountRequestExample'
-            schema:
-              $ref: '#/components/schemas/ServiceAccountRequest'
-        description: service account request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                serviceaccount:
-                  $ref: '#/components/examples/ServiceAccountExample'
-              schema:
-                $ref: '#/components/schemas/ServiceAccount'
-          description: service account created
-        "401":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/401Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Auth token is invalid
-        "403":
-          content:
-            application/json:
-              examples:
-                "403Example":
-                  $ref: '#/components/examples/403Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: list of service account
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: Create a service account
-  /api/daas-api/v1/serviceaccounts/{id}:
-    delete:
-      operationId: deleteServiceAccount
-      parameters:
-      - description: The id of record
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "204":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: deleted
-        "401":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/401Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: auth token is invalid
-        "403":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/403Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: User not authorized to access the service
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema: {}
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: Delete service account
-    description: Get the service account with the given id
-    get:
-      operationId: getServiceAccountById
-      parameters:
-      - description: The id of record
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                sa:
-                  $ref: '#/components/examples/ServiceAccountByIdExample'
-              schema:
-                $ref: '#/components/schemas/ServiceAccount'
-          description: get service account by id
-      security:
-      - Bearer: []
-      summary: get service account by id
-    summary: Get service account by id
-  /api/daas-api/v1/serviceaccounts/{id}/reset-credentials:
-    post:
-      operationId: resetServiceAccountCreds
-      parameters:
-      - description: The id of record
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                sa-reset:
-                  $ref: '#/components/examples/ServiceAccountExample'
-              schema:
-                $ref: '#/components/schemas/ServiceAccount'
-          description: reset credentials
-        "401":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/401Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: auth token is invalid
-        "403":
-          content:
-            application/json:
-              examples:
-                "401Example":
-                  $ref: '#/components/examples/403Example'
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: User not authorized to access the service
-        "500":
-          content:
-            application/json:
-              examples:
-                "500Example":
-                  $ref: '#/components/examples/500Example'
-              schema: {}
-          description: Unexpected error occurred
-      security:
-      - Bearer: []
-      summary: reset credentials for the service account
-  /api/daas-api/v1/decisions/{id}/metrics/query_range:
+  /decisions/{id}/metrics/query_range:
     get:
       operationId: GetMetricsByRangeQuery
       parameters:
@@ -829,7 +376,7 @@ paths:
       security:
       - Bearer: []
       summary: Get metrics with timeseries range query by decision id.
-  /api/daas-api/v1/decisions/{id}/metrics/query:
+  /decisions/{id}/metrics/query:
     get:
       operationId: GetMetricsByInstantQuery
       parameters:
@@ -897,29 +444,30 @@ components:
       value:
         kind: Decision
         id: aba2a420-2afe-456c-b126-073bff1a2023
-        version: "1"
-        href: http://localhost:8080/decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1
+        version: 1
+        href: /decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1
         name: my-brilliant-decision
         description: A human readable description of my decision
         model:
           md5: 8eb41527a8f53e5d673771fa2159edac
-          href: http://localhost:8080/decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1/dmn
+          href: /decisions/aba2a420-2afe-456c-b126-073bff1a2023/versions/1/dmn
         configuration:
           key: value
         tags:
           key: value
         status: BUILDING
+        submitted_at: 2020-10-05T12:51:24.053142Z
     DecisionRequestFailedCreationStatusExample:
       value:
         id: f5e155b9-e1f4-4768-a99e-fc04c5036f0a
         kind: Decision
-        version: "4"
-        href: http://localhost:8080/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4
+        version: 4
+        href: /decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4
         name: my-brilliant-decision
         description: A human readable description of my decision
         model:
           md5: 8eb41527a8f53e5d673771fa2159edac
-          href: http://localhost:8080/decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn
+          href: /decisions/f5e155b9-e1f4-4768-a99e-fc04c5036f0a/versions/4/dmn
         configuration:
           key: value
         tags:
@@ -927,6 +475,21 @@ components:
         status: FAILED
         status_message: Failed to deploy Decision.
         submitted_at: 2020-10-05T12:51:24.053142Z
+    DecisionRequestPayloadExample:
+      value:
+        kind: Decision
+        name: my-brilliant-decision
+        description: A human readable description of my decision
+        eventing:
+          kafka:
+            source: Some Kafka Endpoint
+            sink: Some Kafka Endpoint
+        model:
+          dmn: <xml></xml>
+        configuration:
+          key: value
+        tags:
+          key: value
     CloudProviderExample:
       value:
         kind: CloudProvider
@@ -982,7 +545,7 @@ components:
           strimzi_io_cluster: decision-service
           topic: __consumer_offsets
         values:
-        - Timestamp: 1611670230000
+        - Timestamp: 1611670240000
           Value: 84154
         - Timestamp: 1611670260000
           Value: 85888
@@ -1256,22 +819,11 @@ components:
       required:
       - items
       - kind
-      - page
-      - size
-      - total
       type: object
-    Eventing:
-      allOf:
-      - $ref: '#/components/schemas/ObjectReference'
-      - $ref: '#/components/schemas/Eventing_allOf'
     Error:
       allOf:
       - $ref: '#/components/schemas/ObjectReference'
       - $ref: '#/components/schemas/Error_allOf'
-    ErrorList:
-      allOf:
-      - $ref: '#/components/schemas/List'
-      - $ref: '#/components/schemas/ErrorList_allOf'
     DecisionRequest:
       allOf:
       - $ref: '#/components/schemas/ObjectReference'
@@ -1280,108 +832,12 @@ components:
       allOf:
       - $ref: '#/components/schemas/List'
       - $ref: '#/components/schemas/DecisionList_allOf'
-    VersionMetadata:
-      allOf:
-      - $ref: '#/components/schemas/ObjectReference'
-      - $ref: '#/components/schemas/VersionMetadata_allOf'
-    ServiceStatus:
-      description: Schema for the service status response body
-      example:
-        decisions:
-          max_capacity_reached: true
-      properties:
-        decisions:
-          $ref: '#/components/schemas/ServiceStatus_decisions'
-      type: object
     DecisionRequestPayload:
-      description: Schema for the request body sent to /decisions POST
-      example:
-        name: name
-      properties:
-        name:
-          description: The name of the Decision cluster. It must consist of lower-case
-            alphanumeric characters or '-', start with an alphabetic character, and
-            end with an alphanumeric character, and can not be longer than 32 characters.
-          type: string
-      required:
-      - name
-      type: object
-    CloudProviderList:
-      allOf:
-      - $ref: '#/components/schemas/List'
-      - $ref: '#/components/schemas/CloudProviderList_allOf'
-    CloudRegionList:
-      allOf:
-      - $ref: '#/components/schemas/List'
-      - $ref: '#/components/schemas/CloudRegionList_allOf'
-    CloudProvider:
-      description: Cloud provider.
-      properties:
-        kind:
-          description: Indicates the type of this object. Will be 'CloudProvider'
-            link.
-          type: string
-        id:
-          description: Unique identifier of the object.
-          type: string
-        display_name:
-          description: Name of the cloud provider for display purposes.
-          type: string
-        name:
-          description: Human friendly identifier of the cloud provider, for example
-            `aws`.
-          type: string
-        enabled:
-          description: Whether the cloud provider is enabled for deploying an OSD
-            cluster.
-          type: boolean
-      required:
-      - enabled
-    CloudRegion:
-      description: Description of a region of a cloud provider.
-      properties:
-        kind:
-          description: Indicates the type of this object. Will be 'CloudRegion'.
-          type: string
-        id:
-          description: Unique identifier of the object.
-          type: string
-        display_name:
-          description: Name of the region for display purposes, for example `N. Virginia`.
-          type: string
-        enabled:
-          default: false
-          description: Whether the region is enabled for deploying an OSD cluster.
-          type: boolean
-      required:
-      - enabled
-    ServiceAccount:
       allOf:
       - $ref: '#/components/schemas/ObjectReference'
-      - $ref: '#/components/schemas/ServiceAccount_allOf'
-      description: Service Account created in MAS-SSO for the Decision Cluster for
-        authentication
-    ServiceAccountRequest:
-      description: Schema for the request to create a service account
+      - $ref: '#/components/schemas/DecisionRequestPayload_allOf'
       example:
-        $ref: '#/components/examples/ServiceAccountRequestExample'
-      properties:
-        name:
-          description: The name of the service account
-          type: string
-        description:
-          description: A description for the service account
-          type: string
-      required:
-      - name
-      type: object
-    ServiceAccountListItem:
-      allOf:
-      - $ref: '#/components/schemas/ObjectReference'
-      - $ref: '#/components/schemas/ServiceAccountListItem_allOf'
-    ServiceAccountList:
-      allOf:
-      - $ref: '#/components/schemas/ServiceAccountList_allOf'
+        $ref: '#/components/examples/DecisionRequestPayloadExample'
     MetricsRangeQueryList:
       allOf:
       - $ref: '#/components/schemas/MetricsRangeQueryList_allOf'
@@ -1425,13 +881,6 @@ components:
       required:
       - Value
       type: object
-    Eventing_allOf:
-      properties:
-        source:
-          type: string
-        sink:
-          type: string
-      type: object
     Error_allOf:
       properties:
         code:
@@ -1441,13 +890,6 @@ components:
         operation_id:
           type: string
       type: object
-    ErrorList_allOf:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-      type: object
     DecisionRequest_allOf_model:
       properties:
         md5:
@@ -1455,12 +897,17 @@ components:
         href:
           type: string
       type: object
+    DecisionRequest_allOf_eventing_kafka:
+      properties:
+        source:
+          type: string
+        sink:
+          type: string
+      type: object
     DecisionRequest_allOf_eventing:
       properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Eventing'
-          type: array
+        kafka:
+          $ref: '#/components/schemas/DecisionRequest_allOf_eventing_kafka'
       type: object
     DecisionRequest_allOf:
       example:
@@ -1495,7 +942,7 @@ components:
             type: string
           type: object
         version:
-          type: string
+          type: int
       type: object
     DecisionList_allOf:
       example:
@@ -1512,117 +959,39 @@ components:
             - $ref: '#/components/schemas/DecisionRequest'
           type: array
       type: object
-    VersionMetadata_allOf:
-      example:
-        kind: APIVersion
-        id: v1
-        href: /api/managed-services-api/v1
-        collections:
-        - id: decisions
-          href: /decisions
-          kind: DecisionList
+    DecisionRequestPayload_allOf_model:
       properties:
-        collections:
-          items:
-            allOf:
-            - $ref: '#/components/schemas/ObjectReference'
-          type: array
-      type: object
-    ServiceStatus_decisions:
-      description: The decision resource api status
-      properties:
-        max_capacity_reached:
-          description: Indicates whether we have reached decision maximum capacity
-          type: boolean
+        dmn:
+          type: string
       required:
-      - max_capacity_reached
+      - dmn
       type: object
-    CloudProviderList_allOf:
-      example:
-        kind: CloudProviderList
-        page: "1"
-        size: "1"
-        total: "1"
-        item:
-          $ref: '#/components/examples/CloudProviderExample'
+    DecisionRequestPayload_allOf:
+      description: Schema for the request body sent to /decisions POST
       properties:
-        items:
-          items:
-            allOf:
-            - $ref: '#/components/schemas/CloudProvider'
-          type: array
-      type: object
-    CloudRegionList_allOf:
-      example:
-        kind: CloudRegionList
-        page: "1"
-        size: "1"
-        total: "1"
-        item:
-          $ref: '#/components/examples/CloudRegionExample'
-      properties:
-        items:
-          items:
-            allOf:
-            - $ref: '#/components/schemas/CloudRegion'
-          type: array
-      type: object
-    ServiceAccount_allOf:
-      example:
-        $ref: '#/components/examples/ServiceAccountExample'
-      properties:
-        id:
-          description: server generated unique id of the service account
-          type: string
         name:
+          description: The name of the Decision cluster. It must consist of lower-case
+            alphanumeric characters or '-', start with an alphabetic character, and
+            end with an alphanumeric character, and can not be longer than 32 characters.
           type: string
         description:
           type: string
-        clientID:
-          type: string
-        clientSecret:
-          type: string
-        owner:
-          type: string
-        created_at:
-          format: date-time
-          type: string
-      type: object
-    ServiceAccountListItem_allOf:
-      properties:
-        id:
-          description: server generated unique id of the service account
-          type: string
-        clientID:
-          description: client id of the service account
-          type: string
-        name:
-          description: name of the service account
-          type: string
-        owner:
-          description: owner of the service account
-          type: string
-        created_at:
-          description: service account creation timestamp
-          format: date-time
-          type: string
-        description:
-          description: description of the service account
-          type: string
-      type: object
-    ServiceAccountList_allOf:
-      example:
-        kind: ServiceAccountList
-        items:
-        - $ref: '#/components/examples/ServiceAccountListItemExample'
-      properties:
-        kind:
-          type: string
-        items:
-          items:
-            allOf:
-            - $ref: '#/components/schemas/ServiceAccountListItem'
-          type: array
+        model:
+          $ref: '#/components/schemas/DecisionRequestPayload_allOf_model'
+        eventing:
+          $ref: '#/components/schemas/DecisionRequest_allOf_eventing'
+        configuration:
+          additionalProperties:
+            type: string
+          type: object
+        tags:
+          additionalProperties:
+            type: string
+          type: object
+      required:
+      - description
+      - model
+      - name
       type: object
     MetricsRangeQueryList_allOf:
       example:

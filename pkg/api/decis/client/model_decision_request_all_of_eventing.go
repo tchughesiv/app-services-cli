@@ -16,7 +16,7 @@ import (
 
 // DecisionRequestAllOfEventing struct for DecisionRequestAllOfEventing
 type DecisionRequestAllOfEventing struct {
-	Items *[]Eventing `json:"items,omitempty"`
+	Kafka *DecisionRequestAllOfEventingKafka `json:"kafka,omitempty"`
 }
 
 // NewDecisionRequestAllOfEventing instantiates a new DecisionRequestAllOfEventing object
@@ -36,42 +36,42 @@ func NewDecisionRequestAllOfEventingWithDefaults() *DecisionRequestAllOfEventing
 	return &this
 }
 
-// GetItems returns the Items field value if set, zero value otherwise.
-func (o *DecisionRequestAllOfEventing) GetItems() []Eventing {
-	if o == nil || o.Items == nil {
-		var ret []Eventing
+// GetKafka returns the Kafka field value if set, zero value otherwise.
+func (o *DecisionRequestAllOfEventing) GetKafka() DecisionRequestAllOfEventingKafka {
+	if o == nil || o.Kafka == nil {
+		var ret DecisionRequestAllOfEventingKafka
 		return ret
 	}
-	return *o.Items
+	return *o.Kafka
 }
 
-// GetItemsOk returns a tuple with the Items field value if set, nil otherwise
+// GetKafkaOk returns a tuple with the Kafka field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DecisionRequestAllOfEventing) GetItemsOk() (*[]Eventing, bool) {
-	if o == nil || o.Items == nil {
+func (o *DecisionRequestAllOfEventing) GetKafkaOk() (*DecisionRequestAllOfEventingKafka, bool) {
+	if o == nil || o.Kafka == nil {
 		return nil, false
 	}
-	return o.Items, true
+	return o.Kafka, true
 }
 
-// HasItems returns a boolean if a field has been set.
-func (o *DecisionRequestAllOfEventing) HasItems() bool {
-	if o != nil && o.Items != nil {
+// HasKafka returns a boolean if a field has been set.
+func (o *DecisionRequestAllOfEventing) HasKafka() bool {
+	if o != nil && o.Kafka != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetItems gets a reference to the given []Eventing and assigns it to the Items field.
-func (o *DecisionRequestAllOfEventing) SetItems(v []Eventing) {
-	o.Items = &v
+// SetKafka gets a reference to the given DecisionRequestAllOfEventingKafka and assigns it to the Kafka field.
+func (o *DecisionRequestAllOfEventing) SetKafka(v DecisionRequestAllOfEventingKafka) {
+	o.Kafka = &v
 }
 
 func (o DecisionRequestAllOfEventing) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Items != nil {
-		toSerialize["items"] = o.Items
+	if o.Kafka != nil {
+		toSerialize["kafka"] = o.Kafka
 	}
 	return json.Marshal(toSerialize)
 }

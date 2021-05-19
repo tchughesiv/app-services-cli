@@ -78,44 +78,28 @@ All URIs are relative to *https://api.openshift.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**CreateDecision**](docs/DefaultApi.md#createdecision) | **Post** /api/daas-api/v1/decisions | Create a new decision Request
-*DefaultApi* | [**CreateServiceAccount**](docs/DefaultApi.md#createserviceaccount) | **Post** /api/daas-api/v1/serviceaccounts | Create a service account
-*DefaultApi* | [**DeleteDecisionById**](docs/DefaultApi.md#deletedecisionbyid) | **Delete** /api/daas-api/v1/decisions/{id} | Delete a decision request by id
-*DefaultApi* | [**DeleteServiceAccount**](docs/DefaultApi.md#deleteserviceaccount) | **Delete** /api/daas-api/v1/serviceaccounts/{id} | Delete service account
-*DefaultApi* | [**GetDecisionById**](docs/DefaultApi.md#getdecisionbyid) | **Get** /api/daas-api/v1/decisions/{id} | Get a decision request by id
-*DefaultApi* | [**GetMetricsByInstantQuery**](docs/DefaultApi.md#getmetricsbyinstantquery) | **Get** /api/daas-api/v1/decisions/{id}/metrics/query | Get metrics with instant query by decision id.
-*DefaultApi* | [**GetMetricsByRangeQuery**](docs/DefaultApi.md#getmetricsbyrangequery) | **Get** /api/daas-api/v1/decisions/{id}/metrics/query_range | Get metrics with timeseries range query by decision id.
-*DefaultApi* | [**GetServiceAccountById**](docs/DefaultApi.md#getserviceaccountbyid) | **Get** /api/daas-api/v1/serviceaccounts/{id} | get service account by id
-*DefaultApi* | [**ListCloudProviderRegions**](docs/DefaultApi.md#listcloudproviderregions) | **Get** /api/daas-api/v1/cloud_providers/{id}/regions | Retrieves the list of supported regions of the supported cloud provider.
-*DefaultApi* | [**ListCloudProviders**](docs/DefaultApi.md#listcloudproviders) | **Get** /api/daas-api/v1/cloud_providers | Retrieves the list of supported cloud providers.
-*DefaultApi* | [**ListDecisions**](docs/DefaultApi.md#listdecisions) | **Get** /api/daas-api/v1/decisions | Returns a list of Decision requests
-*DefaultApi* | [**ListServiceAccounts**](docs/DefaultApi.md#listserviceaccounts) | **Get** /api/daas-api/v1/serviceaccounts | List service accounts
-*DefaultApi* | [**ResetServiceAccountCreds**](docs/DefaultApi.md#resetserviceaccountcreds) | **Post** /api/daas-api/v1/serviceaccounts/{id}/reset-credentials | reset credentials for the service account
-*DefaultApi* | [**ServiceStatus**](docs/DefaultApi.md#servicestatus) | **Get** /api/daas-api/v1/status | Retrieves the status of resources e.g whether we have reached maximum service capacity
-*DefaultApi* | [**VersionMetadata**](docs/DefaultApi.md#versionmetadata) | **Get** /api/daas-api/v1 | Retrieves the version metadata
+*DefaultApi* | [**CreateDecision**](docs/DefaultApi.md#createdecision) | **Post** /decisions | Create a new decision Request
+*DefaultApi* | [**DeleteDecisionById**](docs/DefaultApi.md#deletedecisionbyid) | **Delete** /decisions/{id} | Delete a decision request by id
+*DefaultApi* | [**GetDecisionById**](docs/DefaultApi.md#getdecisionbyid) | **Get** /decisions/{id} | Get a decision request by id
+*DefaultApi* | [**GetMetricsByInstantQuery**](docs/DefaultApi.md#getmetricsbyinstantquery) | **Get** /decisions/{id}/metrics/query | Get metrics with instant query by decision id.
+*DefaultApi* | [**GetMetricsByRangeQuery**](docs/DefaultApi.md#getmetricsbyrangequery) | **Get** /decisions/{id}/metrics/query_range | Get metrics with timeseries range query by decision id.
+*DefaultApi* | [**ListDecisions**](docs/DefaultApi.md#listdecisions) | **Get** /decisions | Returns a list of Decision requests
 
 
 ## Documentation For Models
 
- - [CloudProvider](docs/CloudProvider.md)
- - [CloudProviderList](docs/CloudProviderList.md)
- - [CloudProviderListAllOf](docs/CloudProviderListAllOf.md)
- - [CloudRegion](docs/CloudRegion.md)
- - [CloudRegionList](docs/CloudRegionList.md)
- - [CloudRegionListAllOf](docs/CloudRegionListAllOf.md)
  - [DecisionList](docs/DecisionList.md)
  - [DecisionListAllOf](docs/DecisionListAllOf.md)
  - [DecisionRequest](docs/DecisionRequest.md)
  - [DecisionRequestAllOf](docs/DecisionRequestAllOf.md)
  - [DecisionRequestAllOfEventing](docs/DecisionRequestAllOfEventing.md)
+ - [DecisionRequestAllOfEventingKafka](docs/DecisionRequestAllOfEventingKafka.md)
  - [DecisionRequestAllOfModel](docs/DecisionRequestAllOfModel.md)
  - [DecisionRequestPayload](docs/DecisionRequestPayload.md)
+ - [DecisionRequestPayloadAllOf](docs/DecisionRequestPayloadAllOf.md)
+ - [DecisionRequestPayloadAllOfModel](docs/DecisionRequestPayloadAllOfModel.md)
  - [Error](docs/Error.md)
  - [ErrorAllOf](docs/ErrorAllOf.md)
- - [ErrorList](docs/ErrorList.md)
- - [ErrorListAllOf](docs/ErrorListAllOf.md)
- - [Eventing](docs/Eventing.md)
- - [EventingAllOf](docs/EventingAllOf.md)
  - [InstantQuery](docs/InstantQuery.md)
  - [List](docs/List.md)
  - [MetricsInstantQueryList](docs/MetricsInstantQueryList.md)
@@ -124,18 +108,7 @@ Class | Method | HTTP request | Description
  - [MetricsRangeQueryListAllOf](docs/MetricsRangeQueryListAllOf.md)
  - [ObjectReference](docs/ObjectReference.md)
  - [RangeQuery](docs/RangeQuery.md)
- - [ServiceAccount](docs/ServiceAccount.md)
- - [ServiceAccountAllOf](docs/ServiceAccountAllOf.md)
- - [ServiceAccountList](docs/ServiceAccountList.md)
- - [ServiceAccountListAllOf](docs/ServiceAccountListAllOf.md)
- - [ServiceAccountListItem](docs/ServiceAccountListItem.md)
- - [ServiceAccountListItemAllOf](docs/ServiceAccountListItemAllOf.md)
- - [ServiceAccountRequest](docs/ServiceAccountRequest.md)
- - [ServiceStatus](docs/ServiceStatus.md)
- - [ServiceStatusDecisions](docs/ServiceStatusDecisions.md)
  - [Values](docs/Values.md)
- - [VersionMetadata](docs/VersionMetadata.md)
- - [VersionMetadataAllOf](docs/VersionMetadataAllOf.md)
 
 
 ## Documentation For Authorization

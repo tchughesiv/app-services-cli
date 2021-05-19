@@ -1,0 +1,36 @@
+[decision.describe.cmd.use]
+description = "Use is the one-line usage message"
+one = "describe"
+
+[decision.describe.cmd.shortDescription]
+description = "Short description for command"
+one = "View configuration details of an Decision instance"
+
+[decision.describe.cmd.longDescription]
+description = "Long description for command"
+one = '''
+View configuration fields and their values for an Decision instance.
+
+Pass the "--id" flag to specify which instance you would like to view.
+
+If the "--id" flag is not passed then the selected Decision instance will be used, if available.
+
+You can view the output as either as JSON or YAML.
+'''
+
+[decision.describe.cmd.example]
+description = 'Examples of how to use the command'
+one = '''
+# view the current Decision instance instance
+$ rhoas decision describe
+
+# view a specific instance by passing the --id flag
+$ rhoas decision describe --id=1iSY6RQ3JKI8Q0OTmjQFd3ocFRg
+
+# customise the output format
+$ rhoas decision describe -o yaml
+'''
+
+[decision.describe.flag.id]
+description = 'Description for the --id flag'
+one = 'Unique ID of the Decision instance you want to view. If not set, the current Decision instance will be used.'
