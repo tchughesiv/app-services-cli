@@ -116,14 +116,9 @@ type DefaultApiService service
 type ApiCreateDecisionRequest struct {
 	ctx                    _context.Context
 	ApiService             DefaultApi
-	async                  *bool
 	decisionRequestPayload *DecisionRequestPayload
 }
 
-func (r ApiCreateDecisionRequest) Async(async bool) ApiCreateDecisionRequest {
-	r.async = &async
-	return r
-}
 func (r ApiCreateDecisionRequest) DecisionRequestPayload(decisionRequestPayload DecisionRequestPayload) ApiCreateDecisionRequest {
 	r.decisionRequestPayload = &decisionRequestPayload
 	return r
@@ -169,14 +164,10 @@ func (a *DefaultApiService) CreateDecisionExecute(r ApiCreateDecisionRequest) (D
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-	if r.async == nil {
-		return localVarReturnValue, nil, reportError("async is required and must be specified")
-	}
 	if r.decisionRequestPayload == nil {
 		return localVarReturnValue, nil, reportError("decisionRequestPayload is required and must be specified")
 	}
 
-	localVarQueryParams.Add("async", parameterToString(*r.async, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -296,12 +287,6 @@ type ApiDeleteDecisionByIdRequest struct {
 	ctx        _context.Context
 	ApiService DefaultApi
 	id         string
-	async      *bool
-}
-
-func (r ApiDeleteDecisionByIdRequest) Async(async bool) ApiDeleteDecisionByIdRequest {
-	r.async = &async
-	return r
 }
 
 func (r ApiDeleteDecisionByIdRequest) Execute() (Error, *_nethttp.Response, error) {
@@ -347,11 +332,7 @@ func (a *DefaultApiService) DeleteDecisionByIdExecute(r ApiDeleteDecisionByIdReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-	if r.async == nil {
-		return localVarReturnValue, nil, reportError("async is required and must be specified")
-	}
 
-	localVarQueryParams.Add("async", parameterToString(*r.async, ""))
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

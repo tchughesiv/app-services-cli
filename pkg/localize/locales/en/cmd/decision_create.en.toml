@@ -21,7 +21,10 @@ one = '''
 $ rhoas decision create
 
 # create a Decision instance
-$ rhoas decision create my-decision-instance
+$ rhoas decision create my-decision-instance --dmn dmn.xml
+
+# create a Decision instance with configs, tags
+$ rhoas decision create my-decision-instance --config key=one --config blah=two --tag tag=one
 
 # create a Decision instance and output the result in YAML
 $ rhoas decision create -o yaml
@@ -33,7 +36,23 @@ one = 'Decision Description'
 
 [decision.create.flag.dmn.description]
 description = 'Description for the --dmn flag'
-one = 'Decision DMN'
+one = 'Decision DMN File Path'
+
+[decision.create.flag.kafkasource.description]
+description = 'Description for the --kafkaSource flag'
+one = 'Decision Eventing Kafka Source'
+
+[decision.create.flag.kafkasink.description]
+description = 'Description for the --kafkaSink flag'
+one = 'Decision Eventing Kafka Sink'
+
+[decision.create.flag.config.description]
+description = 'Description for the --config flag'
+one = 'Decision Config(s)'
+
+[decision.create.flag.tag.description]
+description = 'Description for the --tag flag'
+one = 'Decision Tag(s)'
 
 [decision.create.flag.autoUse.description]
 one = 'Set the new Decision instance to the current instance'
@@ -64,7 +83,7 @@ one = "DMN:"
 
 [decision.create.input.dmn.help]
 description = 'Help text for DMN'
-one = "Decision Model and Notation the Decision instance will use"
+one = "File with Decision Model and Notation that the Decision instance will use"
 
 [decision.create.argument.name.error.requiredWhenNonInteractive]
 one = 'name is required. Run "rhoas decision create <name>"'

@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 ## CreateDecision
 
-> DecisionRequest CreateDecision(ctx).Async(async).DecisionRequestPayload(decisionRequestPayload).Execute()
+> DecisionRequest CreateDecision(ctx).DecisionRequestPayload(decisionRequestPayload).Execute()
 
 Create a new decision Request
 
@@ -32,12 +32,11 @@ import (
 )
 
 func main() {
-    async := true // bool | Perform the action in an asynchronous manner
     decisionRequestPayload := *openapiclient.NewDecisionRequestPayload("Name_example", "Description_example", *openapiclient.NewDecisionRequestPayloadAllOfModel("Dmn_example")) // DecisionRequestPayload | Decision data
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DefaultApi.CreateDecision(context.Background()).Async(async).DecisionRequestPayload(decisionRequestPayload).Execute()
+    resp, r, err := api_client.DefaultApi.CreateDecision(context.Background()).DecisionRequestPayload(decisionRequestPayload).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.CreateDecision``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -58,7 +57,6 @@ Other parameters are passed through a pointer to a apiCreateDecisionRequest stru
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **async** | **bool** | Perform the action in an asynchronous manner | 
  **decisionRequestPayload** | [**DecisionRequestPayload**](DecisionRequestPayload.md) | Decision data | 
 
 ### Return type
@@ -81,7 +79,7 @@ Name | Type | Description  | Notes
 
 ## DeleteDecisionById
 
-> Error DeleteDecisionById(ctx, id).Async(async).Execute()
+> Error DeleteDecisionById(ctx, id).Execute()
 
 Delete a decision request by id
 
@@ -99,11 +97,10 @@ import (
 
 func main() {
     id := "id_example" // string | The id of record
-    async := true // bool | Perform the action in an asynchronous manner
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DefaultApi.DeleteDecisionById(context.Background(), id).Async(async).Execute()
+    resp, r, err := api_client.DefaultApi.DeleteDecisionById(context.Background(), id).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.DeleteDecisionById``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -129,7 +126,6 @@ Other parameters are passed through a pointer to a apiDeleteDecisionByIdRequest 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **async** | **bool** | Perform the action in an asynchronous manner | 
 
 ### Return type
 
