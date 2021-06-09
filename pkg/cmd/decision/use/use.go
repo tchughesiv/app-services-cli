@@ -48,8 +48,13 @@ func NewUseCommand(f *factory.Factory) *cobra.Command {
 		Long:    opts.localizer.MustLocalize("decision.use.cmd.longDescription"),
 		Example: opts.localizer.MustLocalize("decision.use.cmd.example"),
 		Args:    cobra.RangeArgs(0, 1),
+		/*
+			ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+				return cmdutil.FilterValidDecisions(f, toComplete)
+			},
+		*/
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-			return cmdutil.FilterValidDecisions(f, toComplete)
+			return cmdutil.FilterValidDecisions(f)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

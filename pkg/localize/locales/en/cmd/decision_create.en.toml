@@ -1,0 +1,83 @@
+[decision.create.cmd.use]
+description = "Use is the one-line usage message"
+one = "create"
+
+[decision.create.cmd.shortDescription]
+description = "Short description for command"
+one = "Create a Decision instance"
+
+[decision.create.cmd.longDescription]
+description = "Long description for command"
+one = '''
+Create a Decision instance with a particular DMN and Description.
+
+After creating the instance you can view it by running "rhoas decision describe".
+'''
+
+[decision.create.cmd.example]
+description = 'Examples of how to use the command'
+one = '''
+# start an interactive prompt to fill out the configuration values for the instance
+$ rhoas decision create
+
+# create a Decision instance
+$ rhoas decision create my-decision-instance
+
+# create a Decision instance and output the result in YAML
+$ rhoas decision create -o yaml
+'''
+
+[decision.create.flag.descrip.description]
+description = 'Description for the --descrip flag'
+one = 'Decision Description'
+
+[decision.create.flag.dmn.description]
+description = 'Description for the --dmn flag'
+one = 'Decision DMN'
+
+[decision.create.flag.autoUse.description]
+one = 'Set the new Decision instance to the current instance'
+
+[decision.create.log.debug.creatingDecision]
+description = 'Debug message when Decision instance is being created'
+one = 'Creating Decision instance "{{.Name}}"...'
+
+[decision.create.info.successMessage]
+description = 'Message to display when instance has been created'
+one = 'Decision instance "{{.Name}}" is being provisioned. You can monitor its progress by running "rhoas status".'
+
+[decision.create.input.name.message]
+description = 'Input title for Name'
+one = 'Name:'
+
+[decision.create.input.name.help]
+description = 'Help for Name input'
+one = 'Unique name of the Decision instance'
+
+[decision.create.input.descrip.message]
+description = 'Input title for Description'
+one = 'Description:'
+
+[decision.create.input.dmn.message]
+description = 'Input title for DMN'
+one = "DMN:"
+
+[decision.create.input.dmn.help]
+description = 'Help text for DMN'
+one = "Decision Model and Notation the Decision instance will use"
+
+[decision.create.argument.name.error.requiredWhenNonInteractive]
+one = 'name is required. Run "rhoas decision create <name>"'
+
+[decision.create.debug.autoUseSetMessage]
+one = 'Auto-use Decision is set, updating the current Decision instance'
+
+[decision.create.debug.autoUseNotSetMessage]
+one = 'Auto-use Decision is not set, skipping updating the current Decision instance'
+
+[decision.create.log.info.termsCheck]
+one = '''
+In order to be able to create a Decision instance, you must first review and accept the terms and conditions:
+
+{{.TermsURL}}
+'''

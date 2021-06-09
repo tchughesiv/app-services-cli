@@ -14,31 +14,31 @@ import (
 	"encoding/json"
 )
 
-// EventingAllOf struct for EventingAllOf
-type EventingAllOf struct {
+// DecisionRequestAllOfEventingKafka struct for DecisionRequestAllOfEventingKafka
+type DecisionRequestAllOfEventingKafka struct {
 	Source *string `json:"source,omitempty"`
 	Sink   *string `json:"sink,omitempty"`
 }
 
-// NewEventingAllOf instantiates a new EventingAllOf object
+// NewDecisionRequestAllOfEventingKafka instantiates a new DecisionRequestAllOfEventingKafka object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEventingAllOf() *EventingAllOf {
-	this := EventingAllOf{}
+func NewDecisionRequestAllOfEventingKafka() *DecisionRequestAllOfEventingKafka {
+	this := DecisionRequestAllOfEventingKafka{}
 	return &this
 }
 
-// NewEventingAllOfWithDefaults instantiates a new EventingAllOf object
+// NewDecisionRequestAllOfEventingKafkaWithDefaults instantiates a new DecisionRequestAllOfEventingKafka object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewEventingAllOfWithDefaults() *EventingAllOf {
-	this := EventingAllOf{}
+func NewDecisionRequestAllOfEventingKafkaWithDefaults() *DecisionRequestAllOfEventingKafka {
+	this := DecisionRequestAllOfEventingKafka{}
 	return &this
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
-func (o *EventingAllOf) GetSource() string {
+func (o *DecisionRequestAllOfEventingKafka) GetSource() string {
 	if o == nil || o.Source == nil {
 		var ret string
 		return ret
@@ -48,7 +48,7 @@ func (o *EventingAllOf) GetSource() string {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EventingAllOf) GetSourceOk() (*string, bool) {
+func (o *DecisionRequestAllOfEventingKafka) GetSourceOk() (*string, bool) {
 	if o == nil || o.Source == nil {
 		return nil, false
 	}
@@ -56,7 +56,7 @@ func (o *EventingAllOf) GetSourceOk() (*string, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
-func (o *EventingAllOf) HasSource() bool {
+func (o *DecisionRequestAllOfEventingKafka) HasSource() bool {
 	if o != nil && o.Source != nil {
 		return true
 	}
@@ -65,12 +65,12 @@ func (o *EventingAllOf) HasSource() bool {
 }
 
 // SetSource gets a reference to the given string and assigns it to the Source field.
-func (o *EventingAllOf) SetSource(v string) {
+func (o *DecisionRequestAllOfEventingKafka) SetSource(v string) {
 	o.Source = &v
 }
 
 // GetSink returns the Sink field value if set, zero value otherwise.
-func (o *EventingAllOf) GetSink() string {
+func (o *DecisionRequestAllOfEventingKafka) GetSink() string {
 	if o == nil || o.Sink == nil {
 		var ret string
 		return ret
@@ -80,7 +80,7 @@ func (o *EventingAllOf) GetSink() string {
 
 // GetSinkOk returns a tuple with the Sink field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EventingAllOf) GetSinkOk() (*string, bool) {
+func (o *DecisionRequestAllOfEventingKafka) GetSinkOk() (*string, bool) {
 	if o == nil || o.Sink == nil {
 		return nil, false
 	}
@@ -88,7 +88,7 @@ func (o *EventingAllOf) GetSinkOk() (*string, bool) {
 }
 
 // HasSink returns a boolean if a field has been set.
-func (o *EventingAllOf) HasSink() bool {
+func (o *DecisionRequestAllOfEventingKafka) HasSink() bool {
 	if o != nil && o.Sink != nil {
 		return true
 	}
@@ -97,11 +97,11 @@ func (o *EventingAllOf) HasSink() bool {
 }
 
 // SetSink gets a reference to the given string and assigns it to the Sink field.
-func (o *EventingAllOf) SetSink(v string) {
+func (o *DecisionRequestAllOfEventingKafka) SetSink(v string) {
 	o.Sink = &v
 }
 
-func (o EventingAllOf) MarshalJSON() ([]byte, error) {
+func (o DecisionRequestAllOfEventingKafka) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Source != nil {
 		toSerialize["source"] = o.Source
@@ -112,38 +112,38 @@ func (o EventingAllOf) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-type NullableEventingAllOf struct {
-	value *EventingAllOf
+type NullableDecisionRequestAllOfEventingKafka struct {
+	value *DecisionRequestAllOfEventingKafka
 	isSet bool
 }
 
-func (v NullableEventingAllOf) Get() *EventingAllOf {
+func (v NullableDecisionRequestAllOfEventingKafka) Get() *DecisionRequestAllOfEventingKafka {
 	return v.value
 }
 
-func (v *NullableEventingAllOf) Set(val *EventingAllOf) {
+func (v *NullableDecisionRequestAllOfEventingKafka) Set(val *DecisionRequestAllOfEventingKafka) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableEventingAllOf) IsSet() bool {
+func (v NullableDecisionRequestAllOfEventingKafka) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableEventingAllOf) Unset() {
+func (v *NullableDecisionRequestAllOfEventingKafka) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableEventingAllOf(val *EventingAllOf) *NullableEventingAllOf {
-	return &NullableEventingAllOf{value: val, isSet: true}
+func NewNullableDecisionRequestAllOfEventingKafka(val *DecisionRequestAllOfEventingKafka) *NullableDecisionRequestAllOfEventingKafka {
+	return &NullableDecisionRequestAllOfEventingKafka{value: val, isSet: true}
 }
 
-func (v NullableEventingAllOf) MarshalJSON() ([]byte, error) {
+func (v NullableDecisionRequestAllOfEventingKafka) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableEventingAllOf) UnmarshalJSON(src []byte) error {
+func (v *NullableDecisionRequestAllOfEventingKafka) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

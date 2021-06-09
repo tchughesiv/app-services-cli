@@ -145,7 +145,8 @@ func FilterValidKafkas(f *factory.Factory, toComplete string) (validNames []stri
 
 // FilterValidDecisionNames filters Decisions by name from the API and returns the names
 // This is used in the cobra.ValidArgsFunction for dynamic completion of topic names
-func FilterValidDecisions(f *factory.Factory, toComplete string) (validNames []string, directive cobra.ShellCompDirective) {
+// func FilterValidDecisions(f *factory.Factory, toComplete string) (validNames []string, directive cobra.ShellCompDirective) {
+func FilterValidDecisions(f *factory.Factory) (validNames []string, directive cobra.ShellCompDirective) {
 	validNames = []string{}
 	directive = cobra.ShellCompDirectiveNoSpace
 
@@ -155,10 +156,12 @@ func FilterValidDecisions(f *factory.Factory, toComplete string) (validNames []s
 	}
 
 	req := conn.API().Decision().ListDecisions(context.Background())
-	if toComplete != "" {
-		searchQ := "name like " + toComplete + "%"
-		req = req.Search(searchQ)
-	}
+	/*
+		if toComplete != "" {
+			searchQ := "name like " + toComplete + "%"
+			req = req.Search(searchQ)
+		}
+	*/
 	decisions, _, err := req.Execute()
 
 	if err != nil {

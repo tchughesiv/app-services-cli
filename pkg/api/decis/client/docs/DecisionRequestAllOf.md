@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **PublishedAt** | Pointer to **time.Time** |  | [optional] 
 **Configuration** | Pointer to **map[string]string** |  | [optional] 
 **Tags** | Pointer to **map[string]string** |  | [optional] 
-**Version** | Pointer to **string** |  | [optional] 
+**Version** | Pointer to **int** |  | [optional] 
 
 ## Methods
 
@@ -313,20 +313,20 @@ HasTags returns a boolean if a field has been set.
 
 ### GetVersion
 
-`func (o *DecisionRequestAllOf) GetVersion() string`
+`func (o *DecisionRequestAllOf) GetVersion() int`
 
 GetVersion returns the Version field if non-nil, zero value otherwise.
 
 ### GetVersionOk
 
-`func (o *DecisionRequestAllOf) GetVersionOk() (*string, bool)`
+`func (o *DecisionRequestAllOf) GetVersionOk() (*int, bool)`
 
 GetVersionOk returns a tuple with the Version field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetVersion
 
-`func (o *DecisionRequestAllOf) SetVersion(v string)`
+`func (o *DecisionRequestAllOf) SetVersion(v int)`
 
 SetVersion sets Version field to given value.
 

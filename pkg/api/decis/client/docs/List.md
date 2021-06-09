@@ -5,15 +5,15 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Kind** | **string** |  | 
-**Page** | **int32** |  | 
-**Size** | **int32** |  | 
-**Total** | **int32** |  | 
+**Page** | Pointer to **int32** |  | [optional] 
+**Size** | Pointer to **int32** |  | [optional] 
+**Total** | Pointer to **int32** |  | [optional] 
 
 ## Methods
 
 ### NewList
 
-`func NewList(kind string, page int32, size int32, total int32, ) *List`
+`func NewList(kind string, ) *List`
 
 NewList instantiates a new List object
 This constructor will assign default values to properties that have it defined,
@@ -67,6 +67,11 @@ and a boolean to check if the value has been set.
 
 SetPage sets Page field to given value.
 
+### HasPage
+
+`func (o *List) HasPage() bool`
+
+HasPage returns a boolean if a field has been set.
 
 ### GetSize
 
@@ -87,6 +92,11 @@ and a boolean to check if the value has been set.
 
 SetSize sets Size field to given value.
 
+### HasSize
+
+`func (o *List) HasSize() bool`
+
+HasSize returns a boolean if a field has been set.
 
 ### GetTotal
 
@@ -107,6 +117,11 @@ and a boolean to check if the value has been set.
 
 SetTotal sets Total field to given value.
 
+### HasTotal
+
+`func (o *List) HasTotal() bool`
+
+HasTotal returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

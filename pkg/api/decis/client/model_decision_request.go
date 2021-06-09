@@ -31,7 +31,7 @@ type DecisionRequest struct {
 	PublishedAt   *time.Time                    `json:"published_at,omitempty"`
 	Configuration *map[string]string            `json:"configuration,omitempty"`
 	Tags          *map[string]string            `json:"tags,omitempty"`
-	Version       *string                       `json:"version,omitempty"`
+	Version       *int                          `json:"version,omitempty"`
 }
 
 // NewDecisionRequest instantiates a new DecisionRequest object
@@ -500,9 +500,9 @@ func (o *DecisionRequest) SetTags(v map[string]string) {
 }
 
 // GetVersion returns the Version field value if set, zero value otherwise.
-func (o *DecisionRequest) GetVersion() string {
+func (o *DecisionRequest) GetVersion() int {
 	if o == nil || o.Version == nil {
-		var ret string
+		var ret int
 		return ret
 	}
 	return *o.Version
@@ -510,7 +510,7 @@ func (o *DecisionRequest) GetVersion() string {
 
 // GetVersionOk returns a tuple with the Version field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DecisionRequest) GetVersionOk() (*string, bool) {
+func (o *DecisionRequest) GetVersionOk() (*int, bool) {
 	if o == nil || o.Version == nil {
 		return nil, false
 	}
@@ -526,8 +526,8 @@ func (o *DecisionRequest) HasVersion() bool {
 	return false
 }
 
-// SetVersion gets a reference to the given string and assigns it to the Version field.
-func (o *DecisionRequest) SetVersion(v string) {
+// SetVersion gets a reference to the given int and assigns it to the Version field.
+func (o *DecisionRequest) SetVersion(v int) {
 	o.Version = &v
 }
 
