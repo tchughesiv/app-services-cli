@@ -26,14 +26,6 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Perform the action in an asynchronous manner
-        explode: true
-        in: query
-        name: async
-        required: true
-        schema:
-          type: boolean
-        style: form
       responses:
         "202":
           content:
@@ -202,15 +194,6 @@ paths:
       summary: Returns a list of Decision requests
     post:
       operationId: createDecision
-      parameters:
-      - description: Perform the action in an asynchronous manner
-        explode: true
-        in: query
-        name: async
-        required: true
-        schema:
-          type: boolean
-        style: form
       requestBody:
         content:
           application/json:

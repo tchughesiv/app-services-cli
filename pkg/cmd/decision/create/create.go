@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 
@@ -32,10 +33,13 @@ import (
 )
 
 type Options struct {
-	name    string
-	descrip string
-	dmn     string
-	// multiAZ bool
+	name        string
+	descrip     string
+	dmnFile     string
+	kafkaSource string
+	kafkaSink   string
+	configs     map[string]string
+	tags        map[string]string
 
 	outputFormat string
 	autoUse      bool
@@ -52,17 +56,9 @@ type Options struct {
 const (
 	// default Decision instance values
 	defaultDescrip = "A test decision"
-	defaultDMN     = "<xml></xml>"
-	// defaultMultiAZ  = true
-	// defaultRegion   = "us-east-1"
-	// defaultProvider = "aws"
 )
 
-var (
-	source = "test"
-	sink   = "test"
-	kind   = "Decision"
-)
+var kind = "Decision"
 
 // NewCreateCommand creates a new command for creating decisions.
 func NewCreateCommand(f *factory.Factory) *cobra.Command {
@@ -72,8 +68,6 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 		Connection: f.Connection,
 		Logger:     f.Logger,
 		localizer:  f.Localizer,
-
-		// multiAZ: defaultMultiAZ,
 	}
 
 	cmd := &cobra.Command{
@@ -89,11 +83,16 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 				if err := decision.ValidateName(opts.name); err != nil {
 					return err
 				}
+				if opts.dmnFile != "" {
+					if err := decision.ValidateDMNfile(opts.dmnFile); err != nil {
+						return err
+					}
+				}
 			}
 
-			if !opts.IO.CanPrompt() && opts.name == "" {
+			if !opts.IO.CanPrompt() && opts.name == "" && opts.dmnFile == "" {
 				return errors.New(opts.localizer.MustLocalize("decision.create.argument.name.error.requiredWhenNonInteractive"))
-			} else if opts.name == "" && opts.descrip == "" && opts.dmn == "" {
+			} else if opts.name == "" || opts.descrip == "" || opts.dmnFile == "" {
 				opts.interactive = true
 			}
 
@@ -107,9 +106,14 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.descrip, flags.FlagDescrip, "", opts.localizer.MustLocalize("decision.create.flag.descrip.description"))
-	cmd.Flags().StringVar(&opts.dmn, flags.FlagDMN, "", opts.localizer.MustLocalize("decision.create.flag.dmn.description"))
+	cmd.Flags().StringVar(&opts.dmnFile, flags.FlagDMN, "", opts.localizer.MustLocalize("decision.create.flag.dmn.description"))
+	cmd.Flags().StringVar(&opts.kafkaSource, flags.FlagSource, "", opts.localizer.MustLocalize("decision.create.flag.kafkasource.description"))
+	cmd.Flags().StringVar(&opts.kafkaSink, flags.FlagSink, "", opts.localizer.MustLocalize("decision.create.flag.kafkasink.description"))
+	cmd.Flags().StringToStringVar(&opts.configs, flags.FlagConfig, map[string]string{}, opts.localizer.MustLocalize("decision.create.flag.config.description"))
+	cmd.Flags().StringToStringVar(&opts.tags, flags.FlagTag, map[string]string{}, opts.localizer.MustLocalize("decision.create.flag.tag.description"))
 	cmd.Flags().StringVarP(&opts.outputFormat, "output", "o", "json", opts.localizer.MustLocalize("decision.common.flag.output.description"))
 	cmd.Flags().BoolVar(&opts.autoUse, "use", true, opts.localizer.MustLocalize("decision.create.flag.autoUse.description"))
+	cmd.Flags().SortFlags = false
 
 	return cmd
 }
@@ -133,18 +137,6 @@ func runCreate(opts *Options) error {
 
 	api := connection.API()
 
-	/*
-		// the user must have accepted the terms and conditions from the provider
-		// before they can create a decision instance
-		termsAccepted, termsURL, err := checkTermsAccepted(opts.Connection)
-		if err != nil {
-			return err
-		}
-		if !termsAccepted && termsURL != "" {
-			logger.Info(opts.localizer.MustLocalize("decision.create.log.info.termsCheck", localize.NewEntry("TermsURL", termsURL)))
-			return nil
-		}
-	*/
 	var payload *decisclient.DecisionRequestPayload
 	if opts.interactive {
 		logger.Debug()
@@ -158,39 +150,25 @@ func runCreate(opts *Options) error {
 		if opts.descrip == "" {
 			opts.descrip = opts.name
 		}
-		if opts.dmn == "" {
-			opts.dmn = defaultDMN
-		}
 
 		payload = &decisclient.DecisionRequestPayload{
 			Name:        opts.name,
 			Kind:        &kind,
 			Description: opts.descrip,
-			Model:       decisclient.DecisionRequestPayloadAllOfModel{Dmn: opts.dmn},
-			Eventing: &decisclient.DecisionRequestAllOfEventing{
-				Kafka: &decisclient.DecisionRequestAllOfEventingKafka{
-					Source: &source,
-					Sink:   &sink,
-				},
-			},
-			Configuration: &map[string]string{"test": "test"},
-			Tags: &map[string]string{
-				"test1": "test",
-				"test2": "test",
-			},
-			// Region:        &opts.region,
-			// CloudProvider: &opts.provider,
-			// MultiAz:       &opts.multiAZ,
+		}
+		setEventing(opts.kafkaSource, opts.kafkaSink, payload)
+		if err = setDMN(opts.dmnFile, payload); err != nil {
+			return err
 		}
 	}
+	setConfigsTags(opts.configs, opts.tags, payload)
 
 	logger.Info(opts.localizer.MustLocalize("decision.create.log.debug.creatingDecision", localize.NewEntry("Name", opts.name)))
 
 	a := api.Decision().CreateDecision(context.Background())
 	a = a.DecisionRequestPayload(*payload)
-	a = a.Async(true)
+	// a = a.Async(true)
 	response, _, err := a.Execute()
-
 	if err != nil {
 		return err
 	}
@@ -225,122 +203,118 @@ func runCreate(opts *Options) error {
 
 // Show a prompt to allow the user to interactively insert the data for their Decision
 func promptDecisionPayload(opts *Options) (payload *decisclient.DecisionRequestPayload, err error) {
-	// connection, err := opts.Connection(connection.DefaultConfigSkipMasAuth)
-	// if err != nil {
-	//	return nil, err
-	// }
-
-	// api := connection.API()
-
 	// set type to store the answers from the prompt with defaults
 	answers := struct {
 		Name        string
 		Description string
-		DMN         string
-		// Region        string
-		// MultiAZ       bool
-		// CloudProvider string
-	}{
-		Description: defaultDescrip,
-		DMN:         defaultDMN,
+		DMNFile     string
+		KafkaSource string
+		KafkaSink   string
+	}{}
+
+	answers.Name = opts.name
+	if answers.Name == "" {
+		promptName := &survey.Input{
+			Message: opts.localizer.MustLocalize("decision.create.input.name.message"),
+			Help:    opts.localizer.MustLocalize("decision.create.input.name.help"),
+		}
+		err = survey.AskOne(promptName, &answers.Name, survey.WithValidator(pkgDecision.ValidateName))
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	promptName := &survey.Input{
-		Message: opts.localizer.MustLocalize("decision.create.input.name.message"),
-		Help:    opts.localizer.MustLocalize("decision.create.input.name.help"),
-	}
-	err = survey.AskOne(promptName, &answers.Name, survey.WithValidator(pkgDecision.ValidateName))
-	if err != nil {
-		return nil, err
-	}
-
-	// fetch all cloud available providers
-	// cloudProviderResponse, _, err := api.Decision().ListCloudProviders(context.Background()).Execute()
-	// if err != nil {
-	//	return nil, err
-	// }
-
-	// cloudProviders := cloudProviderResponse.GetItems()
-	// cloudProviderNames := cloudproviderutil.GetEnabledNames(cloudProviders)
-	descripPrompt := &survey.Input{
-		Message: opts.localizer.MustLocalize("decision.create.input.descrip.message"),
-		//Options: cloudProviderNames,
-	}
-	err = survey.AskOne(descripPrompt, &answers.Description)
-	if err != nil {
-		return nil, err
+	answers.Description = opts.descrip
+	if answers.Description == "" {
+		descripPrompt := &survey.Input{
+			Message: opts.localizer.MustLocalize("decision.create.input.descrip.message"),
+			Default: defaultDescrip,
+			//Options: cloudProviderNames,
+		}
+		err = survey.AskOne(descripPrompt, &answers.Description)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	// get the selected provider type from the name selected
-	// selectedCloudProvider := cloudproviderutil.FindByName(cloudProviders, answers.CloudProvider)
-
-	// nolint
-	// cloudRegionResponse, _, err := api.Decision().ListCloudProviderRegions(context.Background(), selectedCloudProvider.GetId()).Execute()
-	// if err != nil {
-	//	return nil, err
-	// }
-
-	// regions := cloudRegionResponse.GetItems()
-	// regionIDs := cloudregionutil.GetEnabledIDs(regions)
-	dmnPrompt := &survey.Input{
-		Message: opts.localizer.MustLocalize("decision.create.input.dmn.message"),
-		// Options: regionIDs,
-		Help: opts.localizer.MustLocalize("decision.create.input.dmn.help"),
+	answers.DMNFile = opts.dmnFile
+	if answers.DMNFile == "" {
+		dmnPrompt := &survey.Input{
+			Message: opts.localizer.MustLocalize("decision.create.input.dmn.message"),
+			Help:    opts.localizer.MustLocalize("decision.create.input.dmn.help"),
+		}
+		err = survey.AskOne(dmnPrompt, &answers.DMNFile, survey.WithValidator(pkgDecision.ValidateDMNfile))
+		if err != nil {
+			return nil, err
+		}
 	}
-	err = survey.AskOne(dmnPrompt, &answers.DMN)
-	if err != nil {
-		return nil, err
+
+	answers.KafkaSource = opts.kafkaSource
+	if answers.KafkaSource == "" {
+		kSourcePrompt := &survey.Input{Message: "Kafka Source:", Help: "optional"}
+		err = survey.AskOne(kSourcePrompt, &answers.KafkaSource)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	answers.KafkaSink = opts.kafkaSink
+	if answers.KafkaSink == "" {
+		kSinkPrompt := &survey.Input{Message: "Kafka Sink:", Help: "optional"}
+		err = survey.AskOne(kSinkPrompt, &answers.KafkaSink)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	payload = &decisclient.DecisionRequestPayload{
 		Name:        answers.Name,
 		Kind:        &kind,
 		Description: answers.Description,
-		Model: decisclient.DecisionRequestPayloadAllOfModel{
-			Dmn: answers.DMN,
-		},
-		Eventing: &decisclient.DecisionRequestAllOfEventing{
-			Kafka: &decisclient.DecisionRequestAllOfEventingKafka{
-				Source: &source,
-				Sink:   &sink,
-			},
-		},
-		Configuration: &map[string]string{"test": "test"},
-		Tags:          &map[string]string{"test": "test"},
-		// Region:        &answers.Region,
-		// CloudProvider: &answers.CloudProvider,
-		// MultiAz:       &answers.MultiAZ,
 	}
+	if err = setDMN(answers.DMNFile, payload); err != nil {
+		return nil, err
+	}
+	setEventing(answers.KafkaSource, answers.KafkaSink, payload)
 
 	return payload, nil
 }
 
-/*
-func checkTermsAccepted(connFunc factory.ConnectionFunc) (accepted bool, redirectURI string, err error) {
-	conn, err := connFunc(connection.DefaultConfigSkipMasAuth)
-	if err != nil {
-		return false, "", err
+// setDMN ...
+func setDMN(dmnFile string, payload *decisclient.DecisionRequestPayload) error {
+	if dmnFile != "" {
+		dmn, err := ioutil.ReadFile(dmnFile)
+		if err != nil {
+			return err
+		}
+		payload.Model = decisclient.DecisionRequestPayloadAllOfModel{
+			Dmn: string(dmn),
+		}
 	}
-
-	termsReview, _, err := conn.API().AccountMgmt().
-		ApiAuthorizationsV1SelfTermsReviewPost(context.Background()).
-		SelfTermsReview(amsclient.SelfTermsReview{
-			EventCode: &build.TermsReviewEventCode,
-			SiteCode:  &build.TermsReviewSiteCode,
-		}).
-		Execute()
-	if err != nil {
-		return false, "", err
-	}
-
-	if !termsReview.GetTermsAvailable() && !termsReview.GetTermsRequired() {
-		return true, "", nil
-	}
-
-	if !termsReview.HasRedirectUrl() {
-		return false, "", errors.New("terms must be signed, but there is no terms URL")
-	}
-
-	return false, termsReview.GetRedirectUrl(), nil
+	return nil
 }
-*/
+
+// setEventing ...
+func setEventing(source, sink string, payload *decisclient.DecisionRequestPayload) {
+	if source != "" || sink != "" {
+		payload.Eventing = &decisclient.DecisionRequestAllOfEventing{
+			Kafka: &decisclient.DecisionRequestAllOfEventingKafka{},
+		}
+		if source != "" {
+			payload.Eventing.Kafka.Source = &source
+		}
+		if sink != "" {
+			payload.Eventing.Kafka.Sink = &sink
+		}
+	}
+}
+
+// setConfigsTags ...
+func setConfigsTags(configs, tags map[string]string, payload *decisclient.DecisionRequestPayload) {
+	if configs != nil {
+		payload.Configuration = &configs
+	}
+	if tags != nil {
+		payload.Tags = &tags
+	}
+}

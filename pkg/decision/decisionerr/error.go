@@ -9,6 +9,7 @@ var (
 	NotFoundByNameErr       error
 	IllegalSearchValueError error
 	InvalidNameErr          error
+	FileNotFoundErr         error
 )
 
 func NotFoundByIDError(id string) error {
@@ -42,4 +43,9 @@ func InvalidNameError(v string) error {
   - must end with an alphanumeric character
 	`, v)
 	return InvalidNameErr
+}
+
+func FileNotFoundError(name string) error {
+	FileNotFoundErr = fmt.Errorf(`File "%v" not found`, name)
+	return FileNotFoundErr
 }

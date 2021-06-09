@@ -2,6 +2,7 @@ package decision
 
 import (
 	"errors"
+	"os"
 	"regexp"
 
 	"github.com/redhat-developer/app-services-cli/pkg/common/commonerr"
@@ -32,6 +33,20 @@ func ValidateName(val interface{}) error {
 	}
 
 	return decisionerr.InvalidNameError(name)
+}
+
+// ValidateDMNfile validates the proposed name of a Decision instance
+func ValidateDMNfile(val interface{}) error {
+	name, ok := val.(string)
+	if !ok {
+		return commonerr.NewCastError(val, "string")
+	}
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return decisionerr.FileNotFoundError(name)
+		}
+	}
+	return nil
 }
 
 /*
