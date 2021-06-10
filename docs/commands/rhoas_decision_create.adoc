@@ -22,7 +22,10 @@ rhoas decision create [flags]
 $ rhoas decision create
 
 # create a Decision instance
-$ rhoas decision create my-decision-instance
+$ rhoas decision create my-decision-instance --dmn dmn.xml
+
+# create a Decision instance with configs, tags
+$ rhoas decision create my-decision-instance --config key=one --config blah=two --tag tag=one
 
 # create a Decision instance and output the result in YAML
 $ rhoas decision create -o yaml
@@ -32,10 +35,14 @@ $ rhoas decision create -o yaml
 === Options
 
 ....
-      --descrip string   Decision Description
-      --dmn string       Decision DMN
-  -o, --output string    Format in which to display the Decision instance. Choose from: "json", "yml", "yaml" (default "json")
-      --use              Set the new Decision instance to the current instance (default true)
+      --descrip string          Decision Description
+      --dmn string              Decision DMN File Path
+      --kafkaSource string      Decision Eventing Kafka Source
+      --kafkaSink string        Decision Eventing Kafka Sink
+      --config stringToString   Decision Config(s) (default [])
+      --tag stringToString      Decision Tag(s) (default [])
+  -o, --output string           Format in which to display the Decision instance. Choose from: "json", "yml", "yaml" (default "json")
+      --use                     Set the new Decision instance to the current instance (default true)
 ....
 
 === Options inherited from parent commands

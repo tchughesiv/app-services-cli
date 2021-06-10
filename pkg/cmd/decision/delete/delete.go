@@ -154,7 +154,7 @@ func runDelete(opts *options) error {
 	// delete the Decision
 	logger.Debug(opts.localizer.MustLocalize("decision.delete.log.debug.deletingDecision"), fmt.Sprintf("\"%s\"", decisionName))
 	a := api.Decision().DeleteDecisionById(context.Background(), response.GetId())
-	a = a.Async(true)
+	// a = a.Async(true)
 	_, _, err = a.Execute()
 
 	if err != nil {
