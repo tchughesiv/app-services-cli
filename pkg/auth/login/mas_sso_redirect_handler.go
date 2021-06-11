@@ -1,23 +1,11 @@
 package login
 
 import (
-	"context"
 	// embed static HTML file
 	_ "embed"
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"os"
-
-	"github.com/coreos/go-oidc"
-	"github.com/redhat-developer/app-services-cli/internal/config"
-	"github.com/redhat-developer/app-services-cli/pkg/auth/token"
-	"github.com/redhat-developer/app-services-cli/pkg/iostreams"
-	"github.com/redhat-developer/app-services-cli/pkg/localize"
-	"github.com/redhat-developer/app-services-cli/pkg/logging"
-	"golang.org/x/oauth2"
 )
 
+/*
 //go:embed static/mas-sso-redirect-page.html
 var masSSOredirectHTMLPage string
 
@@ -110,3 +98,4 @@ func (h *masRedirectPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 
 	h.CancelContext()
 }
+*/
