@@ -1,7 +1,6 @@
 package factory
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/redhat-developer/app-services-cli/internal/build"
@@ -115,10 +114,12 @@ func New(cliVersion string, localizer localize.Localizer) *Factory {
 			return nil, err
 		}
 
-		err = conn.RefreshTokens(context.TODO())
-		if err != nil {
-			return nil, err
-		}
+		/*
+			err = conn.RefreshTokens(context.TODO())
+			if err != nil {
+				return nil, err
+			}
+		*/
 
 		return conn, nil
 	}
