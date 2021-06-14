@@ -12,6 +12,7 @@ import (
 	"github.com/redhat-developer/app-services-cli/internal/build"
 
 	"github.com/redhat-developer/app-services-cli/pkg/auth/login"
+	"github.com/redhat-developer/app-services-cli/pkg/auth/token"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
@@ -205,8 +206,7 @@ func runLogin(opts *Options) (err error) {
 		return err
 	}
 
-	// username, ok := token.GetUsername(cfg.AccessToken)
-	username, ok := "", false
+	username, ok := token.GetUsername(cfg.AccessToken)
 	logger.Info("")
 	if !ok {
 		logger.Info(opts.localizer.MustLocalize("login.log.info.loginSuccessNoUsername"))
