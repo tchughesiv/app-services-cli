@@ -44,12 +44,12 @@ func (a *AuthorizationCodeGrant) Execute(ctx context.Context, ssoCfg *SSOConfig,
 	}
 	a.Logger.Info(a.Localizer.MustLocalize("login.log.info.loggedIn"))
 
-	// a.Logger.Info(a.Localizer.MustLocalize("login.log.info.loggingInMAS"))
+	a.Logger.Info(a.Localizer.MustLocalize("login.log.info.loggingInMAS"))
 	// log in to MAS-SSO
-	// if err := a.loginMAS(ctx, masSSOCfg); err != nil {
-	// 	return err
-	// }
-	// a.Logger.Info(a.Localizer.MustLocalize("login.log.info.loggedInMAS"))
+	if err := a.loginMAS(ctx, masSSOCfg); err != nil {
+		return err
+	}
+	a.Logger.Info(a.Localizer.MustLocalize("login.log.info.loggedInMAS"))
 
 	return nil
 }
@@ -138,7 +138,6 @@ func (a *AuthorizationCodeGrant) loginSSO(ctx context.Context, cfg *SSOConfig) e
 	return nil
 }
 
-/*
 // log in to MAS-SSO
 func (a *AuthorizationCodeGrant) loginMAS(ctx context.Context, cfg *SSOConfig) error {
 	a.Logger.Debug("Logging into", cfg.AuthURL, "\n")
@@ -214,7 +213,6 @@ func (a *AuthorizationCodeGrant) loginMAS(ctx context.Context, cfg *SSOConfig) e
 
 	return nil
 }
-*/
 
 func (a *AuthorizationCodeGrant) openBrowser(authCodeURL string, redirectURL *url.URL) {
 	if a.PrintURL {
