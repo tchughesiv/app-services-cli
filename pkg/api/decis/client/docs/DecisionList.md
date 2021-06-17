@@ -5,16 +5,16 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Kind** | **string** |  | 
-**Page** | Pointer to **int32** |  | [optional] 
-**Size** | Pointer to **int32** |  | [optional] 
-**Total** | Pointer to **int32** |  | [optional] 
+**Page** | **int32** |  | 
+**Size** | **int32** |  | 
+**Total** | **int32** |  | 
 **Items** | [**[]DecisionRequest**](DecisionRequest.md) |  | 
 
 ## Methods
 
 ### NewDecisionList
 
-`func NewDecisionList(kind string, items []DecisionRequest, ) *DecisionList`
+`func NewDecisionList(kind string, page int32, size int32, total int32, items []DecisionRequest, ) *DecisionList`
 
 NewDecisionList instantiates a new DecisionList object
 This constructor will assign default values to properties that have it defined,
@@ -68,11 +68,6 @@ and a boolean to check if the value has been set.
 
 SetPage sets Page field to given value.
 
-### HasPage
-
-`func (o *DecisionList) HasPage() bool`
-
-HasPage returns a boolean if a field has been set.
 
 ### GetSize
 
@@ -93,11 +88,6 @@ and a boolean to check if the value has been set.
 
 SetSize sets Size field to given value.
 
-### HasSize
-
-`func (o *DecisionList) HasSize() bool`
-
-HasSize returns a boolean if a field has been set.
 
 ### GetTotal
 
@@ -118,11 +108,6 @@ and a boolean to check if the value has been set.
 
 SetTotal sets Total field to given value.
 
-### HasTotal
-
-`func (o *DecisionList) HasTotal() bool`
-
-HasTotal returns a boolean if a field has been set.
 
 ### GetItems
 

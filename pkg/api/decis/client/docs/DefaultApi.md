@@ -359,7 +359,7 @@ Name | Type | Description  | Notes
 
 ## ListDecisions
 
-> DecisionList ListDecisions(ctx).Execute()
+> DecisionList ListDecisions(ctx).Page(page).Size(size).Execute()
 
 Returns a list of Decision requests
 
@@ -376,10 +376,12 @@ import (
 )
 
 func main() {
+    page := int32(1) // int32 | Page index (optional)
+    size := int32(100) // int32 | Number of items in each page (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DefaultApi.ListDecisions(context.Background()).Execute()
+    resp, r, err := api_client.DefaultApi.ListDecisions(context.Background()).Page(page).Size(size).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.ListDecisions``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -391,12 +393,17 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiListDecisionsRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int32** | Page index | 
+ **size** | **int32** | Number of items in each page | 
 
 ### Return type
 

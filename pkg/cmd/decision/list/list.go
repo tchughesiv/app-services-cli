@@ -97,27 +97,26 @@ func runList(opts *options) error {
 	api := connection.API()
 
 	a := api.Decision().ListDecisions(context.Background())
-	/*
-		a = a.Page(strconv.Itoa(opts.page))
-		a = a.Size(strconv.Itoa(opts.limit))
+	a = a.Page(int32(opts.page))
+	a = a.Size(int32(opts.limit))
 
+	/*
 		if opts.search != "" {
 			query := buildQuery(opts.search)
 			logger.Debug(opts.localizer.MustLocalize("decision.list.log.debug.filteringDecisionList", localize.NewEntry("Search", query)))
 			a = a.Search(query)
 		}
 	*/
+
 	response, _, err := a.Execute()
 	if err != nil {
 		return err
 	}
 
-	/*
-		if response.Size == nil && opts.outputFormat == "" {
-			logger.Info(opts.localizer.MustLocalize("decision.common.log.info.noDecisionInstances"))
-			return nil
-		}
-	*/
+	if response.Size == 0 && opts.outputFormat == "" {
+		logger.Info(opts.localizer.MustLocalize("decision.common.log.info.noDecisionInstances"))
+		return nil
+	}
 
 	switch opts.outputFormat {
 	case "json":
