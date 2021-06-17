@@ -146,6 +146,29 @@ paths:
   /decisions:
     get:
       operationId: listDecisions
+      parameters:
+      - description: Page index
+        examples:
+          page:
+            value: 1
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Number of items in each page
+        examples:
+          size:
+            value: 100
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          type: integer
+        style: form
       responses:
         "200":
           content:
@@ -694,25 +717,25 @@ components:
       description: Page index
       examples:
         page:
-          value: "1"
+          value: 1
       explode: true
       in: query
       name: page
       required: false
       schema:
-        type: string
+        type: integer
       style: form
     size:
       description: Number of items in each page
       examples:
         size:
-          value: "100"
+          value: 100
       explode: true
       in: query
       name: size
       required: false
       schema:
-        type: string
+        type: integer
       style: form
     orderBy:
       description: |-
@@ -802,6 +825,9 @@ components:
       required:
       - items
       - kind
+      - page
+      - size
+      - total
       type: object
     Error:
       allOf:
@@ -930,9 +956,9 @@ components:
     DecisionList_allOf:
       example:
         kind: DecisionList
-        page: "1"
-        size: "1"
-        total: "1"
+        page: 1
+        size: 1
+        total: 1
         item:
           $ref: '#/components/examples/DecisionRequestExample'
       properties:

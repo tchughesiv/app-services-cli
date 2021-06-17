@@ -17,9 +17,9 @@ import (
 // DecisionList struct for DecisionList
 type DecisionList struct {
 	Kind  string            `json:"kind"`
-	Page  *int32            `json:"page,omitempty"`
-	Size  *int32            `json:"size,omitempty"`
-	Total *int32            `json:"total,omitempty"`
+	Page  int32             `json:"page"`
+	Size  int32             `json:"size"`
+	Total int32             `json:"total"`
 	Items []DecisionRequest `json:"items"`
 }
 
@@ -27,9 +27,12 @@ type DecisionList struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDecisionList(kind string, items []DecisionRequest) *DecisionList {
+func NewDecisionList(kind string, page int32, size int32, total int32, items []DecisionRequest) *DecisionList {
 	this := DecisionList{}
 	this.Kind = kind
+	this.Page = page
+	this.Size = size
+	this.Total = total
 	this.Items = items
 	return &this
 }
@@ -66,100 +69,76 @@ func (o *DecisionList) SetKind(v string) {
 	o.Kind = v
 }
 
-// GetPage returns the Page field value if set, zero value otherwise.
+// GetPage returns the Page field value
 func (o *DecisionList) GetPage() int32 {
-	if o == nil || o.Page == nil {
+	if o == nil {
 		var ret int32
 		return ret
 	}
-	return *o.Page
+
+	return o.Page
 }
 
-// GetPageOk returns a tuple with the Page field value if set, nil otherwise
+// GetPageOk returns a tuple with the Page field value
 // and a boolean to check if the value has been set.
 func (o *DecisionList) GetPageOk() (*int32, bool) {
-	if o == nil || o.Page == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Page, true
+	return &o.Page, true
 }
 
-// HasPage returns a boolean if a field has been set.
-func (o *DecisionList) HasPage() bool {
-	if o != nil && o.Page != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetPage gets a reference to the given int32 and assigns it to the Page field.
+// SetPage sets field value
 func (o *DecisionList) SetPage(v int32) {
-	o.Page = &v
+	o.Page = v
 }
 
-// GetSize returns the Size field value if set, zero value otherwise.
+// GetSize returns the Size field value
 func (o *DecisionList) GetSize() int32 {
-	if o == nil || o.Size == nil {
+	if o == nil {
 		var ret int32
 		return ret
 	}
-	return *o.Size
+
+	return o.Size
 }
 
-// GetSizeOk returns a tuple with the Size field value if set, nil otherwise
+// GetSizeOk returns a tuple with the Size field value
 // and a boolean to check if the value has been set.
 func (o *DecisionList) GetSizeOk() (*int32, bool) {
-	if o == nil || o.Size == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Size, true
+	return &o.Size, true
 }
 
-// HasSize returns a boolean if a field has been set.
-func (o *DecisionList) HasSize() bool {
-	if o != nil && o.Size != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetSize gets a reference to the given int32 and assigns it to the Size field.
+// SetSize sets field value
 func (o *DecisionList) SetSize(v int32) {
-	o.Size = &v
+	o.Size = v
 }
 
-// GetTotal returns the Total field value if set, zero value otherwise.
+// GetTotal returns the Total field value
 func (o *DecisionList) GetTotal() int32 {
-	if o == nil || o.Total == nil {
+	if o == nil {
 		var ret int32
 		return ret
 	}
-	return *o.Total
+
+	return o.Total
 }
 
-// GetTotalOk returns a tuple with the Total field value if set, nil otherwise
+// GetTotalOk returns a tuple with the Total field value
 // and a boolean to check if the value has been set.
 func (o *DecisionList) GetTotalOk() (*int32, bool) {
-	if o == nil || o.Total == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Total, true
+	return &o.Total, true
 }
 
-// HasTotal returns a boolean if a field has been set.
-func (o *DecisionList) HasTotal() bool {
-	if o != nil && o.Total != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetTotal gets a reference to the given int32 and assigns it to the Total field.
+// SetTotal sets field value
 func (o *DecisionList) SetTotal(v int32) {
-	o.Total = &v
+	o.Total = v
 }
 
 // GetItems returns the Items field value
@@ -191,13 +170,13 @@ func (o DecisionList) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["kind"] = o.Kind
 	}
-	if o.Page != nil {
+	if true {
 		toSerialize["page"] = o.Page
 	}
-	if o.Size != nil {
+	if true {
 		toSerialize["size"] = o.Size
 	}
-	if o.Total != nil {
+	if true {
 		toSerialize["total"] = o.Total
 	}
 	if true {
