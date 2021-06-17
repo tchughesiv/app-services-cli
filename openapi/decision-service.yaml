@@ -275,9 +275,9 @@ paths:
               examples:
                 500Example:
                   $ref: "#/components/examples/500Example"
-      #parameters:
-        #- $ref: "#/components/parameters/page"
-        #- $ref: "#/components/parameters/size"
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
         #- $ref: "#/components/parameters/orderBy"
         #- $ref: "#/components/parameters/search"
   #
@@ -368,9 +368,9 @@ components:
     List:
       required:
         - kind
-        #- page
-        #- size
-        #- total
+        - page
+        - size
+        - total
         - items
       type: object
       properties:
@@ -449,9 +449,9 @@ components:
         - type: object
           example:
             kind: "DecisionList"
-            page: "1"
-            size: "1"
-            total: "1"
+            page: 1
+            size: 1
+            total: 1
             item:
               $ref: "#/components/examples/DecisionRequestExample"
           properties:
@@ -628,20 +628,20 @@ components:
       description: Page index
       required: false
       schema:
-        type: string
+        type: integer
       examples:
         page:
-          value: "1"
+          value: 1
     size:
       name: size
       in: query
       description: Number of items in each page
       required: false
       schema:
-        type: string
+        type: integer
       examples:
         size:
-          value: "100"
+          value: 100
     orderBy:
       description: |-
         Specifies the order by criteria. The syntax of this parameter is

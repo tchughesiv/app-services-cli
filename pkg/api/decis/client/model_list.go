@@ -17,18 +17,21 @@ import (
 // List struct for List
 type List struct {
 	Kind  string `json:"kind"`
-	Page  *int32 `json:"page,omitempty"`
-	Size  *int32 `json:"size,omitempty"`
-	Total *int32 `json:"total,omitempty"`
+	Page  int32  `json:"page"`
+	Size  int32  `json:"size"`
+	Total int32  `json:"total"`
 }
 
 // NewList instantiates a new List object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewList(kind string) *List {
+func NewList(kind string, page int32, size int32, total int32) *List {
 	this := List{}
 	this.Kind = kind
+	this.Page = page
+	this.Size = size
+	this.Total = total
 	return &this
 }
 
@@ -64,100 +67,76 @@ func (o *List) SetKind(v string) {
 	o.Kind = v
 }
 
-// GetPage returns the Page field value if set, zero value otherwise.
+// GetPage returns the Page field value
 func (o *List) GetPage() int32 {
-	if o == nil || o.Page == nil {
+	if o == nil {
 		var ret int32
 		return ret
 	}
-	return *o.Page
+
+	return o.Page
 }
 
-// GetPageOk returns a tuple with the Page field value if set, nil otherwise
+// GetPageOk returns a tuple with the Page field value
 // and a boolean to check if the value has been set.
 func (o *List) GetPageOk() (*int32, bool) {
-	if o == nil || o.Page == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Page, true
+	return &o.Page, true
 }
 
-// HasPage returns a boolean if a field has been set.
-func (o *List) HasPage() bool {
-	if o != nil && o.Page != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetPage gets a reference to the given int32 and assigns it to the Page field.
+// SetPage sets field value
 func (o *List) SetPage(v int32) {
-	o.Page = &v
+	o.Page = v
 }
 
-// GetSize returns the Size field value if set, zero value otherwise.
+// GetSize returns the Size field value
 func (o *List) GetSize() int32 {
-	if o == nil || o.Size == nil {
+	if o == nil {
 		var ret int32
 		return ret
 	}
-	return *o.Size
+
+	return o.Size
 }
 
-// GetSizeOk returns a tuple with the Size field value if set, nil otherwise
+// GetSizeOk returns a tuple with the Size field value
 // and a boolean to check if the value has been set.
 func (o *List) GetSizeOk() (*int32, bool) {
-	if o == nil || o.Size == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Size, true
+	return &o.Size, true
 }
 
-// HasSize returns a boolean if a field has been set.
-func (o *List) HasSize() bool {
-	if o != nil && o.Size != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetSize gets a reference to the given int32 and assigns it to the Size field.
+// SetSize sets field value
 func (o *List) SetSize(v int32) {
-	o.Size = &v
+	o.Size = v
 }
 
-// GetTotal returns the Total field value if set, zero value otherwise.
+// GetTotal returns the Total field value
 func (o *List) GetTotal() int32 {
-	if o == nil || o.Total == nil {
+	if o == nil {
 		var ret int32
 		return ret
 	}
-	return *o.Total
+
+	return o.Total
 }
 
-// GetTotalOk returns a tuple with the Total field value if set, nil otherwise
+// GetTotalOk returns a tuple with the Total field value
 // and a boolean to check if the value has been set.
 func (o *List) GetTotalOk() (*int32, bool) {
-	if o == nil || o.Total == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Total, true
+	return &o.Total, true
 }
 
-// HasTotal returns a boolean if a field has been set.
-func (o *List) HasTotal() bool {
-	if o != nil && o.Total != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetTotal gets a reference to the given int32 and assigns it to the Total field.
+// SetTotal sets field value
 func (o *List) SetTotal(v int32) {
-	o.Total = &v
+	o.Total = v
 }
 
 func (o List) MarshalJSON() ([]byte, error) {
@@ -165,13 +144,13 @@ func (o List) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["kind"] = o.Kind
 	}
-	if o.Page != nil {
+	if true {
 		toSerialize["page"] = o.Page
 	}
-	if o.Size != nil {
+	if true {
 		toSerialize["size"] = o.Size
 	}
-	if o.Total != nil {
+	if true {
 		toSerialize["total"] = o.Total
 	}
 	return json.Marshal(toSerialize)

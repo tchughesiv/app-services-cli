@@ -892,6 +892,17 @@ func (a *DefaultApiService) GetMetricsByRangeQueryExecute(r ApiGetMetricsByRange
 type ApiListDecisionsRequest struct {
 	ctx        _context.Context
 	ApiService DefaultApi
+	page       *int32
+	size       *int32
+}
+
+func (r ApiListDecisionsRequest) Page(page int32) ApiListDecisionsRequest {
+	r.page = &page
+	return r
+}
+func (r ApiListDecisionsRequest) Size(size int32) ApiListDecisionsRequest {
+	r.size = &size
+	return r
 }
 
 func (r ApiListDecisionsRequest) Execute() (DecisionList, *_nethttp.Response, error) {
@@ -935,6 +946,12 @@ func (a *DefaultApiService) ListDecisionsExecute(r ApiListDecisionsRequest) (Dec
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
+	if r.page != nil {
+		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	}
+	if r.size != nil {
+		localVarQueryParams.Add("size", parameterToString(*r.size, ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
