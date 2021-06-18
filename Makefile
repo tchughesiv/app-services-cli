@@ -23,10 +23,8 @@ endif
 # The details of the application:
 binary:=rhoas
 
-kasapi_dir=./pkg/api/kas/client
-decisapi_dir=./pkg/api/decis/client
-strimzi_admin_api_dir=./pkg/api/strimzi-admin/client
 amsapi_dir=./pkg/api/ams/amsclient
+decisapi_dir=./pkg/api/decis/client
 
 # Enable Go modules:
 export GO111MODULE=on
@@ -79,57 +77,18 @@ test/unit: install
 	go test -count=1 ./pkg/...
 .PHONY: test/unit
 
-openapi/pull: openapi/strimzi-admin/pull openapi/kas/pull
-.PHONY: openapi/pull
-
-openapi/validate: openapi/strimzi-admin/validate openapi/kas/validate openapi/decis/validate
+openapi/validate: openapi/decis/validate
 .PHONY: openapi/validate
 
-openapi/generate: openapi/strimzi-admin/generate openapi/kas/generate openapi/decis/generate
-.PHONY: openapi/validate
-
-openapi/strimzi-admin/pull:
-	wget -O ./openapi/strimzi-admin.yaml https://raw.githubusercontent.com/strimzi/strimzi-admin/e45b7410c36a96866a417e7adb8646f05d8293b9/rest/src/main/resources/openapi-specs/rest.yaml
-.PHONY: openapi/strimzi-admin/pull
-
-# validate the openapi schema
-openapi/strimzi-admin/validate:
-	openapi-generator-cli validate -i openapi/strimzi-admin.yaml
-.PHONY: openapi/strimzi-admin/validate
-
-# generate the openapi schema
-openapi/strimzi-admin/generate:
-	openapi-generator-cli generate -i openapi/strimzi-admin.yaml -g go --package-name strimziadminclient -p="generateInterfaces=true" --ignore-file-override=$$(pwd)/.openapi-generator-ignore -o ${strimzi_admin_api_dir}
-	openapi-generator-cli validate -i openapi/strimzi-admin.yaml
-	# generate mock
-	moq -out ${strimzi_admin_api_dir}/default_api_mock.go ${strimzi_admin_api_dir} DefaultApi
-	gofmt -w ${strimzi_admin_api_dir}
-.PHONY: openapi/strimzi-admin/generate
+openapi/generate: openapi/decis/generate openapi/validate
+.PHONY: openapi/generate
 
 openapi/ams/generate:
 	openapi-generator-cli generate -i openapi/ams.json -g go --package-name amsclient -p="generateInterfaces=true" --ignore-file-override=$$(pwd)/.openapi-generator-ignore -o ${amsapi_dir}
 	# generate mock
 	moq -out ${amsapi_dir}/default_api_mock.go ${amsapi_dir} DefaultApi
 	gofmt -w ${amsapi_dir}
-.PHONY: openapi/strimzi-admin/generate
-
-openapi/kas/pull:
-	wget -O ./openapi/kafka-service.yaml --no-check-certificate https://gitlab.cee.redhat.com/service/managed-services-api/-/raw/master/openapi/managed-services-api.yaml
-.PHONY: openapi/kas/pull
-
-# validate the openapi schema
-openapi/kas/validate:
-	openapi-generator-cli validate -i openapi/kafka-service.yaml
-.PHONY: openapi/kas/validate
-
-# generate the openapi schema
-openapi/kas/generate:
-	openapi-generator-cli generate -i openapi/kafka-service.yaml -g go --package-name kasclient -p="generateInterfaces=true" --ignore-file-override=$$(pwd)/.openapi-generator-ignore -o ${kasapi_dir}
-	openapi-generator-cli validate -i openapi/kafka-service.yaml
-	# generate mock
-	moq -out ${kasapi_dir}/default_api_mock.go ${kasapi_dir} DefaultApi
-	gofmt -w ${kasapi_dir}
-.PHONY: openapi/kas/generate
+.PHONY: openapi/ams/generate
 
 # validate the openapi schema
 openapi/decis/validate:
@@ -146,16 +105,9 @@ openapi/decis/generate:
 	gofmt -w ${decisapi_dir}
 .PHONY: openapi/decis/generate
 
-mock-api/start: mock-api/client/start
+mock-api/start: 
+	echo -e "y" | npx @rhoas/api-mock
 .PHONY: mock-api/start
-
-mock-api/server/start:
-	cd mas-mock && docker-compose up -d
-.PHONY: mock-api/server/start
-
-mock-api/client/start:
-	cd mas-mock && yarn && yarn start
-.PHONY: mock-api/client/start
 
 # clean up code and dependencies
 format:

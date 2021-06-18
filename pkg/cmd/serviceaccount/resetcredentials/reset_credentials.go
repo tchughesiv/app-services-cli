@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
+
 	"github.com/redhat-developer/app-services-cli/pkg/connection"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 
@@ -79,6 +80,8 @@ func NewResetCredentialsCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().StringVar(&opts.fileFormat, "file-format", "", opts.localizer.MustLocalize("serviceAccount.common.flag.fileFormat.description"))
 	cmd.Flags().BoolVarP(&opts.force, "yes", "y", false, opts.localizer.MustLocalize("serviceAccount.resetCredentials.flag.yes.description"))
 
+	flagutil.EnableStaticFlagCompletion(cmd, "file-format", flagutil.CredentialsOutputFormats)
+
 	return cmd
 }
 
@@ -96,7 +99,7 @@ func runResetCredentials(opts *Options) (err error) {
 
 	api := connection.API()
 
-	serviceacct, _, err := api.Kafka().GetServiceAccountById(context.Background(), opts.id).Execute()
+	serviceacct, _, err := api.ServiceAccount().GetServiceAccountById(context.Background(), opts.id).Execute()
 	if err != nil {
 		return err
 	}
@@ -144,7 +147,7 @@ func runResetCredentials(opts *Options) (err error) {
 	logger.Info(opts.localizer.MustLocalize("serviceAccount.resetCredentials.log.info.resetSuccess", localize.NewEntry("Name", updatedServiceAccount.GetName())))
 
 	creds := &credentials.Credentials{
-		ClientID:     updatedServiceAccount.GetClientID(),
+		ClientID:     updatedServiceAccount.GetClientId(),
 		ClientSecret: updatedServiceAccount.GetClientSecret(),
 	}
 
@@ -159,7 +162,7 @@ func runResetCredentials(opts *Options) (err error) {
 	return nil
 }
 
-func resetCredentials(name string, opts *Options) (*kasclient.ServiceAccount, error) {
+func resetCredentials(name string, opts *Options) (*kafkamgmtclient.ServiceAccount, error) {
 	connection, err := opts.Connection(connection.DefaultConfigSkipMasAuth)
 	if err != nil {
 		return nil, err
@@ -175,7 +178,7 @@ func resetCredentials(name string, opts *Options) (*kasclient.ServiceAccount, er
 
 	logger.Debug(opts.localizer.MustLocalize("serviceAccount.resetCredentials.log.debug.resettingCredentials", localize.NewEntry("Name", name)))
 
-	serviceacct, httpRes, err := api.Kafka().ResetServiceAccountCreds(context.Background(), opts.id).Execute()
+	serviceacct, httpRes, err := api.ServiceAccount().ResetServiceAccountCreds(context.Background(), opts.id).Execute()
 
 	if err != nil {
 		if httpRes == nil {

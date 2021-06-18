@@ -3,13 +3,14 @@ package kas
 import (
 	"errors"
 	"fmt"
-	"github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
+
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 )
 
 type ServiceErrorCode int
 
 const (
-	ErrCodePrefix = "MGD-SERV-API"
+	ErrCodePrefix = "KAFKAS-MGMT"
 
 	// Forbidden occurs when a user is not allowed to access the service
 	ErrorForbidden ServiceErrorCode = 4
@@ -94,13 +95,13 @@ func (e *Error) Unwrap() error {
 }
 
 // GetAPIError gets a strongly typed error from an error
-func GetAPIError(err error) (e kasclient.Error, ok bool) {
-	var apiError kasclient.GenericOpenAPIError
+func GetAPIError(err error) (e kafkamgmtclient.Error, ok bool) {
+	var apiError kafkamgmtclient.GenericOpenAPIError
 
 	if ok = errors.As(err, &apiError); ok {
 		errModel := apiError.Model()
 
-		e, ok = errModel.(kasclient.Error)
+		e, ok = errModel.(kafkamgmtclient.Error)
 	}
 
 	return e, ok

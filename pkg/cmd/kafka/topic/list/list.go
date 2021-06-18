@@ -11,7 +11,9 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/flag"
 	"github.com/redhat-developer/app-services-cli/pkg/connection"
 
-	strimziadminclient "github.com/redhat-developer/app-services-cli/pkg/api/strimzi-admin/client"
+	kafkainstanceclient "github.com/redhat-developer/app-services-sdk-go/kafkainstance/apiv1internal/client"
+
+	flagutil "github.com/redhat-developer/app-services-cli/pkg/cmdutil/flags"
 
 	"gopkg.in/yaml.v2"
 
@@ -32,6 +34,7 @@ type Options struct {
 
 	kafkaID string
 	output  string
+	search  string
 }
 
 type topicRow struct {
@@ -64,6 +67,12 @@ func NewListTopicCommand(f *factory.Factory) *cobra.Command {
 				}
 			}
 
+			if opts.search != "" {
+				if err := topicutil.ValidateSearchInput(opts.search, opts.localizer); err != nil {
+					return err
+				}
+			}
+
 			cfg, err := opts.Config.Load()
 			if err != nil {
 				return err
@@ -80,6 +89,9 @@ func NewListTopicCommand(f *factory.Factory) *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.output, "output", "o", "", opts.localizer.MustLocalize("kafka.topic.list.flag.output.description"))
+	cmd.Flags().StringVarP(&opts.search, "search", "", "", opts.localizer.MustLocalize("kafka.topic.list.flag.search.description"))
+
+	flagutil.EnableOutputFlagCompletion(cmd)
 
 	return cmd
 }
@@ -95,12 +107,18 @@ func runCmd(opts *Options) error {
 		return err
 	}
 
-	api, kafkaInstance, err := conn.API().TopicAdmin(opts.kafkaID)
+	api, kafkaInstance, err := conn.API().KafkaAdmin(opts.kafkaID)
 	if err != nil {
 		return err
 	}
 
-	a := api.GetTopicsList(context.Background())
+	a := api.GetTopics(context.Background())
+
+	if opts.search != "" {
+		logger.Debug(opts.localizer.MustLocalize("kafka.topic.list.log.debug.filteringTopicList", localize.NewEntry("Search", opts.search)))
+		a = a.Filter(opts.search)
+	}
+
 	topicData, httpRes, err := a.Execute()
 
 	if err != nil {
@@ -111,9 +129,9 @@ func runCmd(opts *Options) error {
 		operationTemplatePair := localize.NewEntry("Operation", "list")
 		switch httpRes.StatusCode {
 		case 401:
-			return errors.New(opts.localizer.MustLocalize("kafka.topic.list.common.error.unauthorized", operationTemplatePair))
+			return errors.New(opts.localizer.MustLocalize("kafka.topic.list.error.unauthorized", operationTemplatePair))
 		case 403:
-			return errors.New(opts.localizer.MustLocalize("kafka.topic.list.common.error.forbidden", operationTemplatePair))
+			return errors.New(opts.localizer.MustLocalize("kafka.topic.list.error.forbidden", operationTemplatePair))
 		case 500:
 			return errors.New(opts.localizer.MustLocalize("kafka.topic.common.error.internalServerError"))
 		case 503:
@@ -146,7 +164,7 @@ func runCmd(opts *Options) error {
 	return nil
 }
 
-func mapTopicResultsToTableFormat(topics []strimziadminclient.Topic) []topicRow {
+func mapTopicResultsToTableFormat(topics []kafkainstanceclient.Topic) []topicRow {
 	var rows []topicRow = []topicRow{}
 
 	for _, t := range topics {

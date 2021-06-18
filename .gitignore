@@ -3,6 +3,7 @@ vendor
 dist
 /rhoas
 node_modules
+target
 **/package-lock.json
 .idea
 

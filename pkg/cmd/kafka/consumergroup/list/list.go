@@ -9,9 +9,9 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
-	strimziadminclient "github.com/redhat-developer/app-services-cli/pkg/api/strimzi-admin/client"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/factory"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/flag"
+	"github.com/redhat-developer/app-services-cli/pkg/cmdutil"
 	flagutil "github.com/redhat-developer/app-services-cli/pkg/cmdutil/flags"
 	"github.com/redhat-developer/app-services-cli/pkg/connection"
 	"github.com/redhat-developer/app-services-cli/pkg/dump"
@@ -19,6 +19,7 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/kafka/consumergroup"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 	"github.com/redhat-developer/app-services-cli/pkg/logging"
+	kafkainstanceclient "github.com/redhat-developer/app-services-sdk-go/kafkainstance/apiv1internal/client"
 	"github.com/spf13/cobra"
 )
 
@@ -81,6 +82,12 @@ func NewListConsumerGroupCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().StringVarP(&opts.output, "output", "o", "", opts.localizer.MustLocalize("kafka.consumerGroup.list.flag.output.description"))
 	cmd.Flags().StringVar(&opts.topic, "topic", "", opts.localizer.MustLocalize("kafka.consumerGroup.list.flag.topic.description"))
 
+	_ = cmd.RegisterFlagCompletionFunc("topic", func(cmd *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return cmdutil.FilterValidTopicNameArgs(f, toComplete)
+	})
+
+	flagutil.EnableOutputFlagCompletion(cmd)
+
 	return cmd
 }
 
@@ -97,12 +104,12 @@ func runList(opts *Options) (err error) {
 
 	ctx := context.Background()
 
-	api, kafkaInstance, err := conn.API().TopicAdmin(opts.kafkaID)
+	api, kafkaInstance, err := conn.API().KafkaAdmin(opts.kafkaID)
 	if err != nil {
 		return err
 	}
 
-	req := api.GetConsumerGroupList(ctx)
+	req := api.GetConsumerGroups(ctx)
 	req = req.Limit(opts.limit)
 	if opts.topic != "" {
 		req = req.Topic(opts.topic)
@@ -157,7 +164,7 @@ func runList(opts *Options) (err error) {
 
 }
 
-func mapConsumerGroupResultsToTableFormat(consumerGroups []strimziadminclient.ConsumerGroup) []consumerGroupRow {
+func mapConsumerGroupResultsToTableFormat(consumerGroups []kafkainstanceclient.ConsumerGroup) []consumerGroupRow {
 	var rows []consumerGroupRow = []consumerGroupRow{}
 
 	for _, t := range consumerGroups {
@@ -180,12 +187,12 @@ func checkForConsumerGroups(count int, opts *Options, kafkaName string) (hasCoun
 	if err != nil {
 		return false, err
 	}
-	kafkaNameTmplPair := localize.NewEntry("Name", kafkaName)
+	kafkaNameTmplPair := localize.NewEntry("InstanceName", kafkaName)
 	if count == 0 && opts.output == "" {
 		if opts.topic == "" {
-			logger.Info(opts.localizer.MustLocalize("kafka.consumerGroup.list.log.info.noConsumerGroups"), kafkaNameTmplPair)
+			logger.Info(opts.localizer.MustLocalize("kafka.consumerGroup.list.log.info.noConsumerGroups", kafkaNameTmplPair))
 		} else {
-			logger.Info(opts.localizer.MustLocalize("kafka.consumerGroup.list.log.info.noConsumerGroupsForTopic"), kafkaNameTmplPair, localize.NewEntry("TopicName", opts.topic))
+			logger.Info(opts.localizer.MustLocalize("kafka.consumerGroup.list.log.info.noConsumerGroupsForTopic", kafkaNameTmplPair, localize.NewEntry("TopicName", opts.topic)))
 		}
 
 		return false, nil

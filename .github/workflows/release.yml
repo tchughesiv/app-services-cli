@@ -25,16 +25,15 @@ jobs:
       - name: Check tag
         id: check-tag
         run: |
-          if [[ =~ ^refs/tags/^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo ::set-output name=prerelease=false
+          if [[ ${GITHUB_REF} =~ ^refs/tags/^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::set-output name=prerelease::false"
           else
-            echo ::set-output name=prerelease=true
+            echo "::set-output name=prerelease::true"
           fi
-
+      - run: echo ${{ steps.check-tag.outputs.prerelease }}
       - 
         name: Install git-chglog
         uses: craicoverflow/install-git-chglog@v1
-
       - 
         name: Generate release notes
         if: steps.check-tag.outputs.prerelease == 'false'
@@ -56,7 +55,7 @@ jobs:
         if: steps.check-tag.outputs.prerelease == 'true'
         with:
           version: latest
-          args: release --rm-dist --release-notes=RELEASE_NOTES.md
+          args: release --rm-dist
           key: ${{ secrets.YOUR_PRIVATE_KEY }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

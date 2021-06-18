@@ -13,11 +13,11 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/flag"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/factory"
 	"github.com/redhat-developer/app-services-cli/pkg/cmdutil"
 	"github.com/redhat-developer/app-services-cli/pkg/dump"
 	"github.com/redhat-developer/app-services-cli/pkg/kafka"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -90,6 +90,8 @@ func NewDescribeCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().StringVarP(&opts.outputFormat, "output", "o", "json", opts.localizer.MustLocalize("kafka.common.flag.output.description"))
 	cmd.Flags().StringVar(&opts.id, "id", "", opts.localizer.MustLocalize("kafka.describe.flag.id"))
 
+	flagutil.EnableOutputFlagCompletion(cmd)
+
 	return cmd
 }
 
@@ -101,7 +103,7 @@ func runDescribe(opts *Options) error {
 
 	api := connection.API()
 
-	var kafkaInstance *kasclient.KafkaRequest
+	var kafkaInstance *kafkamgmtclient.KafkaRequest
 	ctx := context.Background()
 	if opts.name != "" {
 		kafkaInstance, _, err = kafka.GetKafkaByName(ctx, api.Kafka(), opts.name)
@@ -118,7 +120,7 @@ func runDescribe(opts *Options) error {
 	return printKafka(kafkaInstance, opts)
 }
 
-func printKafka(kafka *kasclient.KafkaRequest, opts *Options) error {
+func printKafka(kafka *kafkamgmtclient.KafkaRequest, opts *Options) error {
 	switch opts.outputFormat {
 	case "yaml", "yml":
 		data, err := yaml.Marshal(kafka)

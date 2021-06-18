@@ -8,8 +8,8 @@ import (
 
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 	"github.com/redhat-developer/app-services-cli/pkg/serviceaccount/validation"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 	"github.com/redhat-developer/app-services-cli/pkg/connection"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -65,7 +65,7 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 
 			if !opts.interactive {
 				if opts.fileFormat == "" {
-					return errors.New(opts.localizer.MustLocalize("flag.error.required", localize.NewEntry("Flag", "file-format")))
+					return errors.New(opts.localizer.MustLocalize("flag.error.requiredWhenNonInteractive", localize.NewEntry("Flag", "file-format")))
 				}
 
 				if err = validation.ValidateName(opts.name); err != nil {
@@ -91,6 +91,8 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().BoolVar(&opts.overwrite, "overwrite", false, opts.localizer.MustLocalize("serviceAccount.common.flag.overwrite.description"))
 	cmd.Flags().StringVar(&opts.filename, "file-location", "", opts.localizer.MustLocalize("serviceAccount.common.flag.fileLocation.description"))
 	cmd.Flags().StringVar(&opts.fileFormat, "file-format", "", opts.localizer.MustLocalize("serviceAccount.common.flag.fileFormat.description"))
+
+	flagutil.EnableStaticFlagCompletion(cmd, "file-format", flagutil.CredentialsOutputFormats)
 
 	return cmd
 }
@@ -126,10 +128,9 @@ func runCreate(opts *Options) error {
 	}
 
 	// create the service account
-	serviceAccountPayload := &kasclient.ServiceAccountRequest{Name: opts.name, Description: &opts.description}
+	serviceAccountPayload := &kafkamgmtclient.ServiceAccountRequest{Name: opts.name, Description: &opts.description}
 
-	api := connection.API()
-	a := api.Kafka().CreateServiceAccount(context.Background())
+	a := connection.API().ServiceAccount().CreateServiceAccount(context.Background())
 	a = a.ServiceAccountRequest(*serviceAccountPayload)
 	serviceacct, _, err := a.Execute()
 
@@ -140,7 +141,7 @@ func runCreate(opts *Options) error {
 	logger.Info(opts.localizer.MustLocalize("serviceAccount.create.log.info.createdSuccessfully", localize.NewEntry("ID", serviceacct.GetId()), localize.NewEntry("Name", serviceacct.GetName())))
 
 	creds := &credentials.Credentials{
-		ClientID:     serviceacct.GetClientID(),
+		ClientID:     serviceacct.GetClientId(),
 		ClientSecret: serviceacct.GetClientSecret(),
 	}
 
@@ -150,7 +151,7 @@ func runCreate(opts *Options) error {
 		return fmt.Errorf("%v: %w", opts.localizer.MustLocalize("serviceAccount.common.error.couldNotSaveCredentialsFile"), err)
 	}
 
-	logger.Info(opts.localizer.MustLocalize("serviceAccount.common.log.info.credentialsSaved", localize.NewEntry("FileName", opts.filename)))
+	logger.Info(opts.localizer.MustLocalize("serviceAccount.common.log.info.credentialsSaved", localize.NewEntry("FilePath", opts.filename)))
 
 	return nil
 }

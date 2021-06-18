@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"strconv"
 
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 	flagutil "github.com/redhat-developer/app-services-cli/pkg/cmdutil/flags"
 	"github.com/redhat-developer/app-services-cli/pkg/connection"
 	"github.com/redhat-developer/app-services-cli/pkg/iostreams"
 	"github.com/redhat-developer/app-services-cli/pkg/kafka"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 
 	"github.com/redhat-developer/app-services-cli/pkg/dump"
 
@@ -84,6 +84,8 @@ func NewListCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().IntVarP(&opts.limit, "limit", "", 100, opts.localizer.MustLocalize("kafka.list.flag.limit"))
 	cmd.Flags().StringVarP(&opts.search, "search", "", "", opts.localizer.MustLocalize("kafka.list.flag.search"))
 
+	flagutil.EnableOutputFlagCompletion(cmd)
+
 	return cmd
 }
 
@@ -100,7 +102,7 @@ func runList(opts *options) error {
 
 	api := connection.API()
 
-	a := api.Kafka().ListKafkas(context.Background())
+	a := api.Kafka().GetKafkas(context.Background())
 	a = a.Page(strconv.Itoa(opts.page))
 	a = a.Size(strconv.Itoa(opts.limit))
 
@@ -137,7 +139,7 @@ func runList(opts *options) error {
 	return nil
 }
 
-func mapResponseItemsToRows(kafkas []kasclient.KafkaRequest) []kafkaRow {
+func mapResponseItemsToRows(kafkas []kafkamgmtclient.KafkaRequest) []kafkaRow {
 	rows := []kafkaRow{}
 
 	for _, k := range kafkas {
