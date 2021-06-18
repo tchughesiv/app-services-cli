@@ -9,6 +9,7 @@ require (
 	github.com/Nerzal/gocloak/v7 v7.11.0
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fabric8-analytics/cli-tools v0.2.3 // indirect
 	github.com/fatih/color v1.10.0
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/go-querystring v1.0.0 // indirect
@@ -24,6 +25,7 @@ require (
 	github.com/pquerna/cachecontrol v0.1.0 // indirect
 	github.com/redhat-developer/app-services-sdk-go v0.3.3
 	github.com/redhat-developer/service-binding-operator v0.7.1
+	github.com/rs/zerolog v1.23.0 // indirect
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/pflag v1.0.5
 	gitlab.com/c0b/go-ordered-json v0.0.0-20201030195603-febf46534d5a

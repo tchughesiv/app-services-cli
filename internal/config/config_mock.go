@@ -13,28 +13,28 @@ var _ IConfig = &IConfigMock{}
 
 // IConfigMock is a mock implementation of IConfig.
 //
-//     func TestSomethingThatUsesIConfig(t *testing.T) {
+// 	func TestSomethingThatUsesIConfig(t *testing.T) {
 //
-//         // make and configure a mocked IConfig
-//         mockedIConfig := &IConfigMock{
-//             LoadFunc: func() (*Config, error) {
-// 	               panic("mock out the Load method")
-//             },
-//             LocationFunc: func() (string, error) {
-// 	               panic("mock out the Location method")
-//             },
-//             RemoveFunc: func() error {
-// 	               panic("mock out the Remove method")
-//             },
-//             SaveFunc: func(config *Config) error {
-// 	               panic("mock out the Save method")
-//             },
-//         }
+// 		// make and configure a mocked IConfig
+// 		mockedIConfig := &IConfigMock{
+// 			LoadFunc: func() (*Config, error) {
+// 				panic("mock out the Load method")
+// 			},
+// 			LocationFunc: func() (string, error) {
+// 				panic("mock out the Location method")
+// 			},
+// 			RemoveFunc: func() error {
+// 				panic("mock out the Remove method")
+// 			},
+// 			SaveFunc: func(config *Config) error {
+// 				panic("mock out the Save method")
+// 			},
+// 		}
 //
-//         // use mockedIConfig in code that requires IConfig
-//         // and then make assertions.
+// 		// use mockedIConfig in code that requires IConfig
+// 		// and then make assertions.
 //
-//     }
+// 	}
 type IConfigMock struct {
 	// LoadFunc mocks the Load method.
 	LoadFunc func() (*Config, error)

@@ -23,13 +23,8 @@ endif
 # The details of the application:
 binary:=rhoas
 
-<<<<<<< HEAD
-=======
-kasapi_dir=./pkg/api/kas/client
-decisapi_dir=./pkg/api/decis/client
-strimzi_admin_api_dir=./pkg/api/strimzi-admin/client
->>>>>>> 6888340 (feat: init decision api)
 amsapi_dir=./pkg/api/ams/amsclient
+decisapi_dir=./pkg/api/decis/client
 
 # Enable Go modules:
 export GO111MODULE=on
@@ -82,12 +77,33 @@ test/unit: install
 	go test -count=1 ./pkg/...
 .PHONY: test/unit
 
+openapi/validate: openapi/decis/validate
+.PHONY: openapi/validate
+
+openapi/generate: openapi/decis/generate openapi/validate
+.PHONY: openapi/generate
+
 openapi/ams/generate:
 	openapi-generator-cli generate -i openapi/ams.json -g go --package-name amsclient -p="generateInterfaces=true" --ignore-file-override=$$(pwd)/.openapi-generator-ignore -o ${amsapi_dir}
 	# generate mock
 	moq -out ${amsapi_dir}/default_api_mock.go ${amsapi_dir} DefaultApi
 	gofmt -w ${amsapi_dir}
 .PHONY: openapi/ams/generate
+
+# validate the openapi schema
+openapi/decis/validate:
+	openapi-generator-cli validate -i openapi/decision-service.yaml
+.PHONY: openapi/decis/validate
+
+# generate the openapi schema
+openapi/decis/generate:
+	rm -f ${decisapi_dir}/model_*.go
+	openapi-generator-cli generate -i openapi/decision-service.yaml -g go --package-name decisclient -p="generateInterfaces=true" --ignore-file-override=$$(pwd)/.openapi-generator-ignore -o ${decisapi_dir}
+	openapi-generator-cli validate -i openapi/decision-service.yaml
+	# generate mock
+	moq -out ${decisapi_dir}/default_api_mock.go ${decisapi_dir} DefaultApi
+	gofmt -w ${decisapi_dir}
+.PHONY: openapi/decis/generate
 
 mock-api/start: 
 	echo -e "y" | npx @rhoas/api-mock

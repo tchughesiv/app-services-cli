@@ -8,10 +8,6 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/redhat-developer/app-services-cli/pkg/connection"
-	"github.com/redhat-developer/app-services-cli/pkg/kafka/kafkaerr"
-	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
-
 	"github.com/openconfig/goyang/pkg/indent"
 	"github.com/redhat-developer/app-services-cli/internal/config"
 	"github.com/redhat-developer/app-services-cli/pkg/api/decis"
@@ -21,6 +17,7 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/decision/decisionerr"
 	"github.com/redhat-developer/app-services-cli/pkg/kafka/kafkaerr"
 	"github.com/redhat-developer/app-services-cli/pkg/logging"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 )
 
 const tagTitle = "title"

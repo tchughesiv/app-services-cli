@@ -4,9 +4,8 @@ import (
 	"context"
 	"errors"
 
-	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
 	"github.com/redhat-developer/app-services-cli/pkg/api"
@@ -72,6 +71,7 @@ func NewConnectionMock(conn *connection.KeycloakConnection, apiClient *kafkamgmt
 			a := &api.API{
 				Kafka: func() kafkamgmtclient.DefaultApi {
 					return apiClient.DefaultApi
+				},
 				Decision: func() decisclient.DefaultApi {
 					return decisClient.DefaultApi
 				},

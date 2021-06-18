@@ -15,25 +15,25 @@ var _ Connection = &ConnectionMock{}
 
 // ConnectionMock is a mock implementation of Connection.
 //
-//     func TestSomethingThatUsesConnection(t *testing.T) {
+// 	func TestSomethingThatUsesConnection(t *testing.T) {
 //
-//         // make and configure a mocked Connection
-//         mockedConnection := &ConnectionMock{
-//             APIFunc: func() *api.API {
-// 	               panic("mock out the API method")
-//             },
-//             LogoutFunc: func(ctx context.Context) error {
-// 	               panic("mock out the Logout method")
-//             },
-//             RefreshTokensFunc: func(ctx context.Context) error {
-// 	               panic("mock out the RefreshTokens method")
-//             },
-//         }
+// 		// make and configure a mocked Connection
+// 		mockedConnection := &ConnectionMock{
+// 			APIFunc: func() *api.API {
+// 				panic("mock out the API method")
+// 			},
+// 			LogoutFunc: func(ctx context.Context) error {
+// 				panic("mock out the Logout method")
+// 			},
+// 			RefreshTokensFunc: func(ctx context.Context) error {
+// 				panic("mock out the RefreshTokens method")
+// 			},
+// 		}
 //
-//         // use mockedConnection in code that requires Connection
-//         // and then make assertions.
+// 		// use mockedConnection in code that requires Connection
+// 		// and then make assertions.
 //
-//     }
+// 	}
 type ConnectionMock struct {
 	// APIFunc mocks the API method.
 	APIFunc func() *api.API

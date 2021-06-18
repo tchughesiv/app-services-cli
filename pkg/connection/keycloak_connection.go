@@ -176,17 +176,12 @@ func (c *KeycloakConnection) API() *api.API {
 
 		return apiClient.SecurityApi
 	}
-	decisionAPIFunc := func() decisclient.DefaultApi {
-		if cachedDecisionServiceAPI != nil {
-			return cachedDecisionServiceAPI
-		}
 
+	decisionAPIFunc := func() decisclient.DefaultApi {
 		// create the client
 		decisionAPIClient := c.createDecisionAPIClient()
 
-		cachedDecisionServiceAPI = decisionAPIClient.DefaultApi
-
-		return cachedDecisionServiceAPI
+		return decisionAPIClient.DefaultApi
 	}
 
 	kafkaAdminAPIFunc := func(kafkaID string) (kafkainstanceclient.DefaultApi, *kafkamgmtclient.KafkaRequest, error) {

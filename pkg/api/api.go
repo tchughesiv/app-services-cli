@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/redhat-developer/app-services-cli/pkg/api/ams/amsclient"
+	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
 	kafkainstanceclient "github.com/redhat-developer/app-services-sdk-go/kafkainstance/apiv1internal/client"
 	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 )
@@ -12,4 +13,5 @@ type API struct {
 	ServiceAccount func() kafkamgmtclient.SecurityApi
 	KafkaAdmin     func(kafkaID string) (kafkainstanceclient.DefaultApi, *kafkamgmtclient.KafkaRequest, error)
 	AccountMgmt    func() amsclient.DefaultApi
+	Decision       func() decisclient.DefaultApi
 }
