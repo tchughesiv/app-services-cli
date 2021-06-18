@@ -1,28 +1,4 @@
 
-<a name="v0.24.4"></a>
-## [v0.24.4](https://github.com/redhat-developer/app-services-cli/compare/0.24.3...v0.24.4) (2021-06-14)
-
-### Bug Fixes
-
-* fix invalid i18n arg ([#681](https://github.com/redhat-developer/app-services-cli/issues/681))
-* minor bug fixes and validations ([#696](https://github.com/redhat-developer/app-services-cli/issues/696))
-* misformatted error message ([#669](https://github.com/redhat-developer/app-services-cli/issues/669))
-* erroneous message for invalid option ([#689](https://github.com/redhat-developer/app-services-cli/issues/689))
-* localize id for cluster info ([#688](https://github.com/redhat-developer/app-services-cli/issues/688))
-* fix invalid i18n ID ([#680](https://github.com/redhat-developer/app-services-cli/issues/680))
-* **config:** create config directory if it does not exist ([#683](https://github.com/redhat-developer/app-services-cli/issues/683))
-* **kafka create:** run interactive if no name provided and fix typos ([#705](https://github.com/redhat-developer/app-services-cli/issues/705))
-* **kafka delete:** show proper message for delete operation ([#700](https://github.com/redhat-developer/app-services-cli/issues/700))
-* **kafka topic:** update regexp for topic name ([#663](https://github.com/redhat-developer/app-services-cli/issues/663))
-
-### Features
-
-* Add ability to specify a binding name using binding-name flag
-* **completion:** dynamic completion for suitable flags ([#702](https://github.com/redhat-developer/app-services-cli/issues/702))
-* **completion:** static completion for suitable flags ([#686](https://github.com/redhat-developer/app-services-cli/issues/686))
-* **kafka topic:** add search flag to list subcommand ([#709](https://github.com/redhat-developer/app-services-cli/issues/709))
-
-
 <a name="0.24.3"></a>
 ## [0.24.3](https://github.com/redhat-developer/app-services-cli/compare/0.24.2...0.24.3) (2021-04-26)
 
@@ -212,28 +188,18 @@ This change will mean that old Kafka instances are inaccessible without overridi
 
 
 <a name="0.20.3"></a>
-## [0.20.3](https://github.com/redhat-developer/app-services-cli/compare/0.20.2...0.20.3) (2021-03-29)
+## [0.20.3](https://github.com/redhat-developer/app-services-cli/compare/0.20.1...0.20.3) (2021-03-29)
 
 ### Bug Fixes
 
+* **config:** check if .config directory exists ([#498](https://github.com/redhat-developer/app-services-cli/issues/498))
+* **kafka topic:** creation in interactive mode should check if name is available ([#492](https://github.com/redhat-developer/app-services-cli/issues/492))
 * **serviceaccount:** fix invalid i18n message ([#509](https://github.com/redhat-developer/app-services-cli/issues/509))
 * **serviceaccount reset-credentials:** files should use clientID, clientSecret instead of user, password ([#502](https://github.com/redhat-developer/app-services-cli/issues/502))
 
 ### Features
 
 * add support for generating modular docs ([#504](https://github.com/redhat-developer/app-services-cli/issues/504))
-
-
-<a name="0.20.2"></a>
-## [0.20.2](https://github.com/redhat-developer/app-services-cli/compare/0.20.1...0.20.2) (2021-03-26)
-
-### Bug Fixes
-
-* **config:** check if .config directory exists ([#498](https://github.com/redhat-developer/app-services-cli/issues/498))
-* **kafka topic:** creation in interactive mode should check if name is available ([#492](https://github.com/redhat-developer/app-services-cli/issues/492))
-
-### Features
-
 * **kafka create:** add --use flag to set current Kafka instance ([#491](https://github.com/redhat-developer/app-services-cli/issues/491))
 
 
