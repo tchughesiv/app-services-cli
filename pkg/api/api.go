@@ -3,14 +3,15 @@ package api
 import (
 	"github.com/redhat-developer/app-services-cli/pkg/api/ams/amsclient"
 	decisclient "github.com/redhat-developer/app-services-cli/pkg/api/decis/client"
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
-	strimziadminclient "github.com/redhat-developer/app-services-cli/pkg/api/strimzi-admin/client"
+	kafkainstanceclient "github.com/redhat-developer/app-services-sdk-go/kafkainstance/apiv1internal/client"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 )
 
 // API is a type which defines a number of API creator functions
 type API struct {
-	Kafka       func() kasclient.DefaultApi
-	TopicAdmin  func(kafkaID string) (strimziadminclient.DefaultApi, *kasclient.KafkaRequest, error)
-	AccountMgmt func() amsclient.DefaultApi
-	Decision    func() decisclient.DefaultApi
+	Kafka          func() kafkamgmtclient.DefaultApi
+	ServiceAccount func() kafkamgmtclient.SecurityApi
+	KafkaAdmin     func(kafkaID string) (kafkainstanceclient.DefaultApi, *kafkamgmtclient.KafkaRequest, error)
+	AccountMgmt    func() amsclient.DefaultApi
+	Decision       func() decisclient.DefaultApi
 }

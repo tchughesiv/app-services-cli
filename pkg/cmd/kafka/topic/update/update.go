@@ -12,13 +12,14 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/connection"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 
+	flagutil "github.com/redhat-developer/app-services-cli/pkg/cmdutil/flags"
 	topicutil "github.com/redhat-developer/app-services-cli/pkg/kafka/topic"
 
 	"github.com/redhat-developer/app-services-cli/pkg/cmd/flag"
 
-	strimziadminclient "github.com/redhat-developer/app-services-cli/pkg/api/strimzi-admin/client"
 	"github.com/redhat-developer/app-services-cli/pkg/dump"
 	"github.com/redhat-developer/app-services-cli/pkg/iostreams"
+	kafkainstanceclient "github.com/redhat-developer/app-services-sdk-go/kafkainstance/apiv1internal/client"
 	"gopkg.in/yaml.v2"
 
 	"github.com/redhat-developer/app-services-cli/internal/config"
@@ -156,6 +157,8 @@ func NewUpdateTopicCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().StringVar(&opts.retentionMsStr, "retention-ms", "", opts.localizer.MustLocalize("kafka.topic.common.input.retentionMs.description"))
 	cmd.Flags().StringVar(&opts.retentionBytesStr, "retention-bytes", "", opts.localizer.MustLocalize("kafka.topic.common.input.retentionBytes.description"))
 
+	flagutil.EnableOutputFlagCompletion(cmd)
+
 	return cmd
 }
 
@@ -193,7 +196,7 @@ func runCmd(opts *Options) error {
 	if err != nil {
 		return err
 	}
-	api, kafkaInstance, err := conn.API().TopicAdmin(opts.kafkaID)
+	api, kafkaInstance, err := conn.API().KafkaAdmin(opts.kafkaID)
 	if err != nil {
 		return err
 	}
@@ -219,7 +222,7 @@ func runCmd(opts *Options) error {
 
 	updateTopicReq := api.UpdateTopic(context.Background(), opts.topicName)
 
-	topicSettings := &strimziadminclient.UpdateTopicInput{}
+	topicSettings := &kafkainstanceclient.UpdateTopicInput{}
 
 	if opts.retentionMsStr != "" {
 		needsUpdate = true
@@ -268,7 +271,7 @@ func runCmd(opts *Options) error {
 		}
 	}
 
-	logger.Info(opts.localizer.MustLocalize("kafka.topic.delete.log.info.topicUpdated", topicNameTmplPair, kafkaNameTmplPair))
+	logger.Info(opts.localizer.MustLocalize("kafka.topic.update.log.info.topicUpdated", topicNameTmplPair, kafkaNameTmplPair))
 
 	switch opts.outputFormat {
 	case "json":

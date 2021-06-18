@@ -1,6 +1,7 @@
 package kafka
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"regexp"
@@ -8,8 +9,8 @@ import (
 
 	"github.com/redhat-developer/app-services-cli/pkg/common/commonerr"
 	"github.com/redhat-developer/app-services-cli/pkg/kafka/kafkaerr"
-
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
+	"github.com/redhat-developer/app-services-cli/pkg/localize"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 )
 
 var (
@@ -40,7 +41,7 @@ func ValidateName(val interface{}) error {
 
 // TransformKafkaRequestListItems modifies fields fields from a list of kafka instances
 // The main transformation is appending ":443" to the Bootstrap Server URL
-func TransformKafkaRequestListItems(items []kasclient.KafkaRequest) []kasclient.KafkaRequest {
+func TransformKafkaRequestListItems(items []kafkamgmtclient.KafkaRequest) []kafkamgmtclient.KafkaRequest {
 	for i := range items {
 		kafka := items[i]
 		kafka = *TransformKafkaRequest(&kafka)
@@ -52,7 +53,7 @@ func TransformKafkaRequestListItems(items []kasclient.KafkaRequest) []kasclient.
 
 // TransformKafkaRequest modifies fields from the KafkaRequest payload object
 // The main transformation is appending ":443" to the Bootstrap Server URL
-func TransformKafkaRequest(kafka *kasclient.KafkaRequest) *kasclient.KafkaRequest {
+func TransformKafkaRequest(kafka *kafkamgmtclient.KafkaRequest) *kafkamgmtclient.KafkaRequest {
 	bootstrapHost := kafka.GetBootstrapServerHost()
 
 	if bootstrapHost == "" {
@@ -82,4 +83,23 @@ func ValidateSearchInput(val interface{}) error {
 	}
 
 	return kafkaerr.InvalidSearchValueError(search)
+}
+
+// ValidateNameIsAvailable checks if a kafka instance with the given name already exists
+func ValidateNameIsAvailable(api kafkamgmtclient.DefaultApi, localizer localize.Localizer) func(v interface{}) error {
+	return func(v interface{}) error {
+		name, _ := v.(string)
+
+		_, httpRes, _ := GetKafkaByName(context.Background(), api, name)
+
+		if httpRes != nil && httpRes.StatusCode == 200 {
+			return errors.New(localizer.MustLocalize("kafka.create.error.conflictError", localize.NewEntry("Name", name)))
+		}
+
+		if httpRes != nil && httpRes.Body != nil {
+			httpRes.Body.Close()
+		}
+
+		return nil
+	}
 }

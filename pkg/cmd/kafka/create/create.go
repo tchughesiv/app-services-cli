@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
+
 	"github.com/redhat-developer/app-services-cli/pkg/api/ams/amsclient"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
 
@@ -15,8 +17,6 @@ import (
 	"github.com/redhat-developer/app-services-cli/pkg/kafka"
 
 	"github.com/redhat-developer/app-services-cli/internal/build"
-
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 
 	"github.com/redhat-developer/app-services-cli/pkg/cloudprovider/cloudproviderutil"
 	"github.com/redhat-developer/app-services-cli/pkg/cloudregion/cloudregionutil"
@@ -91,7 +91,10 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 
 			if !opts.IO.CanPrompt() && opts.name == "" {
 				return errors.New(opts.localizer.MustLocalize("kafka.create.argument.name.error.requiredWhenNonInteractive"))
-			} else if opts.name == "" && opts.provider == "" && opts.region == "" {
+			} else if opts.name == "" {
+				if opts.provider != "" || opts.region != "" {
+					return errors.New(opts.localizer.MustLocalize("kafka.create.argument.name.error.requiredWhenNonInteractive"))
+				}
 				opts.interactive = true
 			}
 
@@ -108,6 +111,12 @@ func NewCreateCommand(f *factory.Factory) *cobra.Command {
 	cmd.Flags().StringVar(&opts.region, flags.FlagRegion, "", opts.localizer.MustLocalize("kafka.create.flag.cloudRegion.description"))
 	cmd.Flags().StringVarP(&opts.outputFormat, "output", "o", "json", opts.localizer.MustLocalize("kafka.common.flag.output.description"))
 	cmd.Flags().BoolVar(&opts.autoUse, "use", true, opts.localizer.MustLocalize("kafka.create.flag.autoUse.description"))
+
+	_ = cmd.RegisterFlagCompletionFunc(flags.FlagProvider, func(cmd *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return cmdutil.FetchCloudProviders(f)
+	})
+
+	flagutil.EnableOutputFlagCompletion(cmd)
 
 	return cmd
 }
@@ -142,7 +151,7 @@ func runCreate(opts *Options) error {
 		return nil
 	}
 
-	var payload *kasclient.KafkaRequestPayload
+	var payload *kafkamgmtclient.KafkaRequestPayload
 	if opts.interactive {
 		logger.Debug()
 
@@ -159,7 +168,7 @@ func runCreate(opts *Options) error {
 			opts.region = defaultRegion
 		}
 
-		payload = &kasclient.KafkaRequestPayload{
+		payload = &kafkamgmtclient.KafkaRequestPayload{
 			Name:          opts.name,
 			Region:        &opts.region,
 			CloudProvider: &opts.provider,
@@ -167,12 +176,16 @@ func runCreate(opts *Options) error {
 		}
 	}
 
-	logger.Info(opts.localizer.MustLocalize("kafka.create.log.debug.creatingKafka", localize.NewEntry("Name", opts.name)))
+	logger.Info(opts.localizer.MustLocalize("kafka.create.log.info.creatingKafka", localize.NewEntry("Name", payload.Name)))
 
 	a := api.Kafka().CreateKafka(context.Background())
 	a = a.KafkaRequestPayload(*payload)
 	a = a.Async(true)
-	response, _, err := a.Execute()
+	response, httpRes, err := a.Execute()
+
+	if httpRes.StatusCode == 409 {
+		return errors.New(opts.localizer.MustLocalize("kafka.create.error.conflictError", localize.NewEntry("Name", payload.Name)))
+	}
 
 	if err != nil {
 		return err
@@ -207,7 +220,7 @@ func runCreate(opts *Options) error {
 }
 
 // Show a prompt to allow the user to interactively insert the data for their Kafka
-func promptKafkaPayload(opts *Options) (payload *kasclient.KafkaRequestPayload, err error) {
+func promptKafkaPayload(opts *Options) (payload *kafkamgmtclient.KafkaRequestPayload, err error) {
 	connection, err := opts.Connection(connection.DefaultConfigSkipMasAuth)
 	if err != nil {
 		return nil, err
@@ -230,13 +243,13 @@ func promptKafkaPayload(opts *Options) (payload *kasclient.KafkaRequestPayload, 
 		Help:    opts.localizer.MustLocalize("kafka.create.input.name.help"),
 	}
 
-	err = survey.AskOne(promptName, &answers.Name, survey.WithValidator(pkgKafka.ValidateName))
+	err = survey.AskOne(promptName, &answers.Name, survey.WithValidator(pkgKafka.ValidateName), survey.WithValidator(pkgKafka.ValidateNameIsAvailable(api.Kafka(), opts.localizer)))
 	if err != nil {
 		return nil, err
 	}
 
 	// fetch all cloud available providers
-	cloudProviderResponse, _, err := api.Kafka().ListCloudProviders(context.Background()).Execute()
+	cloudProviderResponse, _, err := api.Kafka().GetCloudProviders(context.Background()).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +271,7 @@ func promptKafkaPayload(opts *Options) (payload *kasclient.KafkaRequestPayload, 
 	selectedCloudProvider := cloudproviderutil.FindByName(cloudProviders, answers.CloudProvider)
 
 	// nolint
-	cloudRegionResponse, _, err := api.Kafka().ListCloudProviderRegions(context.Background(), selectedCloudProvider.GetId()).Execute()
+	cloudRegionResponse, _, err := api.Kafka().GetCloudProviderRegions(context.Background(), selectedCloudProvider.GetId()).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -277,7 +290,7 @@ func promptKafkaPayload(opts *Options) (payload *kasclient.KafkaRequestPayload, 
 		return nil, err
 	}
 
-	payload = &kasclient.KafkaRequestPayload{
+	payload = &kafkamgmtclient.KafkaRequestPayload{
 		Name:          answers.Name,
 		Region:        &answers.Region,
 		CloudProvider: &answers.CloudProvider,

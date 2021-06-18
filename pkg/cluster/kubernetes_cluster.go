@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"time"
 
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
+
 	"github.com/redhat-developer/app-services-cli/pkg/iostreams"
 	"github.com/redhat-developer/app-services-cli/pkg/kafka/kafkaerr"
 	"github.com/redhat-developer/app-services-cli/pkg/localize"
@@ -21,7 +23,6 @@ import (
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 
 	"github.com/redhat-developer/app-services-cli/pkg/api/kas"
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/redhat-developer/app-services-cli/pkg/color"
@@ -145,7 +146,7 @@ func (c *KubernetesCluster) Connect(ctx context.Context, cmdOptions *ConnectArgu
 	// print status
 	c.logger.Info(c.localizer.MustLocalize("cluster.kubernetes.log.info.statusMessage"))
 
-	c.localizer.MustLocalize("cluster.kubernetes.info",
+	c.localizer.MustLocalize("cluster.kubernetes.statusInfo",
 		localize.NewEntry("InstanceName", color.Info(kafkaInstance.GetName())),
 		localize.NewEntry("Namespace", color.Info(currentNamespace)),
 		localize.NewEntry("ServiceAccountSecretName", color.Info(serviceAccountSecretName)))
@@ -191,7 +192,7 @@ func (c *KubernetesCluster) Connect(ctx context.Context, cmdOptions *ConnectArgu
 }
 
 // createKafkaConnectionCustomResource creates a new "KafkaConnection" CR
-func (c *KubernetesCluster) createKafkaConnectionCustomResource(ctx context.Context, namespace string, kafkaInstance *kasclient.KafkaRequest) error {
+func (c *KubernetesCluster) createKafkaConnectionCustomResource(ctx context.Context, namespace string, kafkaInstance *kafkamgmtclient.KafkaRequest) error {
 	crName := kafkaInstance.GetName()
 	kafkaID := kafkaInstance.GetId()
 
@@ -293,7 +294,7 @@ func (c *KubernetesCluster) createServiceAccountSecretIfNeeded(ctx context.Conte
 			Namespace: namespace,
 		},
 		StringData: map[string]string{
-			"client-id":     serviceAcct.GetClientID(),
+			"client-id":     serviceAcct.GetClientId(),
 			"client-secret": serviceAcct.GetClientSecret(),
 		},
 	}
@@ -309,12 +310,12 @@ func (c *KubernetesCluster) createServiceAccountSecretIfNeeded(ctx context.Conte
 }
 
 // createServiceAccount creates a service account
-func (c *KubernetesCluster) createServiceAccount(ctx context.Context) (*kasclient.ServiceAccount, error) {
+func (c *KubernetesCluster) createServiceAccount(ctx context.Context) (*kafkamgmtclient.ServiceAccount, error) {
 	t := time.Now()
 
 	api := c.connection.API()
-	serviceAcct := &kasclient.ServiceAccountRequest{Name: fmt.Sprintf("rhoascli-%v", t.Unix())}
-	req := api.Kafka().CreateServiceAccount(ctx)
+	serviceAcct := &kafkamgmtclient.ServiceAccountRequest{Name: fmt.Sprintf("rhoascli-%v", t.Unix())}
+	req := api.ServiceAccount().CreateServiceAccount(ctx)
 	req = req.ServiceAccountRequest(*serviceAcct)
 	res, _, err := req.Execute()
 

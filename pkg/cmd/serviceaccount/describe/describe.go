@@ -56,6 +56,8 @@ func NewDescribeCommand(f *factory.Factory) *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("id")
 
+	flagutil.EnableOutputFlagCompletion(cmd)
+
 	return cmd
 }
 
@@ -67,8 +69,7 @@ func runDescribe(opts *Options) error {
 
 	api := connection.API()
 
-	a := api.Kafka().GetServiceAccountById(context.Background(), opts.id)
-	res, httpRes, err := a.Execute()
+	res, httpRes, err := api.ServiceAccount().GetServiceAccountById(context.Background(), opts.id).Execute()
 
 	if err != nil {
 		if httpRes == nil {

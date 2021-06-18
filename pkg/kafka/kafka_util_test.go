@@ -3,7 +3,7 @@ package kafka
 import (
 	"testing"
 
-	kasclient "github.com/redhat-developer/app-services-cli/pkg/api/kas/client"
+	kafkamgmtclient "github.com/redhat-developer/app-services-sdk-go/kafkamgmt/apiv1/client"
 )
 
 func TestValidateName(t *testing.T) {
@@ -102,7 +102,7 @@ func TestTransformRequest(t *testing.T) {
 	hostWithNoPort := "my-kafka-url"
 
 	type args struct {
-		kafkaInstance *kasclient.KafkaRequest
+		kafkaInstance *kafkamgmtclient.KafkaRequest
 	}
 	tests := []struct {
 		name                    string
@@ -112,7 +112,7 @@ func TestTransformRequest(t *testing.T) {
 		{
 			name: "bootstrapServerHost should be transformed to empty string when nil",
 			args: args{
-				kafkaInstance: &kasclient.KafkaRequest{
+				kafkaInstance: &kafkamgmtclient.KafkaRequest{
 					BootstrapServerHost: nil,
 				},
 			},
@@ -121,7 +121,7 @@ func TestTransformRequest(t *testing.T) {
 		{
 			name: "bootstrapServerHost should be the same when SSL port already exists",
 			args: args{
-				kafkaInstance: &kasclient.KafkaRequest{
+				kafkaInstance: &kafkamgmtclient.KafkaRequest{
 					BootstrapServerHost: &hostWithSSLPort,
 				},
 			},
@@ -130,7 +130,7 @@ func TestTransformRequest(t *testing.T) {
 		{
 			name: "bootstrapServerHost should get SSL port when none exists",
 			args: args{
-				kafkaInstance: &kasclient.KafkaRequest{
+				kafkaInstance: &kafkamgmtclient.KafkaRequest{
 					BootstrapServerHost: &hostWithNoPort,
 				},
 			},
@@ -160,24 +160,24 @@ func TestTransformKafkaRequestListItems(t *testing.T) {
 	emptyHost := ""
 
 	type args struct {
-		items []kasclient.KafkaRequest
+		items []kafkamgmtclient.KafkaRequest
 	}
 	tests := []struct {
 		name string
 		args args
-		want []kasclient.KafkaRequest
+		want []kafkamgmtclient.KafkaRequest
 	}{
 		{
 			name: "Should return empty list when no kafkas",
 			args: args{
-				items: []kasclient.KafkaRequest{},
+				items: []kafkamgmtclient.KafkaRequest{},
 			},
-			want: []kasclient.KafkaRequest{},
+			want: []kafkamgmtclient.KafkaRequest{},
 		},
 		{
 			name: "Should update all bootstrapServerHost ports",
 			args: args{
-				items: []kasclient.KafkaRequest{
+				items: []kafkamgmtclient.KafkaRequest{
 					{
 						BootstrapServerHost: &emptyHost,
 					},
@@ -189,7 +189,7 @@ func TestTransformKafkaRequestListItems(t *testing.T) {
 					},
 				},
 			},
-			want: []kasclient.KafkaRequest{
+			want: []kafkamgmtclient.KafkaRequest{
 				{
 					BootstrapServerHost: &emptyHost,
 				},
