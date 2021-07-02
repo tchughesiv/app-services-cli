@@ -1,0 +1,44 @@
+== rhoas decision use
+
+ifdef::env-github,env-browser[:relfilesuffix: .adoc]
+
+Set the current Decision instance
+
+=== Synopsis
+
+Select a Decision instance and set it as the current instance.
+
+When you set the Decision instance to be used, it is set as the current instance for all "rhoas decision" commands.
+
+When an ID is not specified in other Decision commands, the current Decision instance is used.
+
+
+....
+rhoas decision use [flags]
+....
+
+=== Examples
+
+....
+# set a decision instance to be the current instance
+$ rhoas decision use --id=1iSY6RQ3JKI8Q0OTmjQFd3ocFRg,
+
+....
+
+=== Options
+
+....
+      --id string   Unique ID of the Decision instance you want to set as the current instance.
+....
+
+=== Options inherited from parent commands
+
+....
+  -d, --debug   Enable debug mode
+  -h, --help    Show help for a command
+....
+
+=== SEE ALSO
+
+* link:rhoas_decision{relfilesuffix}[rhoas decision]	 - Create, view, use, and manage your Decision instances
+

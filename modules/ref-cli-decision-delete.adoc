@@ -1,0 +1,47 @@
+== rhoas decision delete
+
+ifdef::env-github,env-browser[:relfilesuffix: .adoc]
+
+Delete a Decision instance
+
+=== Synopsis
+
+Permanently delete a Decision instance, including all topics.
+
+When this command is run, you will be asked to confirm the name of the instance you want to delete.
+Otherwise you can pass "--yes" to skip confirmation and forcibly delete the instance.
+
+
+....
+rhoas decision delete [flags]
+....
+
+=== Examples
+
+....
+# delete the current Decision instance
+$ rhoas decision delete
+
+# delete a Decision instance with a specific ID
+$ rhoas decision delete --id=1iSY6RQ3JKI8Q0OTmjQFd3ocFRg
+
+....
+
+=== Options
+
+....
+      --id string   Unique ID of the Decision instance you want to delete. If not set, the current Decision instance will be used.
+  -y, --yes         Skip confirmation to forcibly delete this Decision instance.
+....
+
+=== Options inherited from parent commands
+
+....
+  -d, --debug   Enable debug mode
+  -h, --help    Show help for a command
+....
+
+=== SEE ALSO
+
+* link:rhoas_decision{relfilesuffix}[rhoas decision]	 - Create, view, use, and manage your Decision instances
+

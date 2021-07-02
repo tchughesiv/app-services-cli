@@ -1,0 +1,22 @@
+== rhoas decision
+
+ifdef::env-github,env-browser[:relfilesuffix: .adoc]
+
+Create, view, use, and manage your Decision instances
+
+=== Options inherited from parent commands
+
+....
+  -d, --debug   Enable debug mode
+  -h, --help    Show help for a command
+....
+
+=== SEE ALSO
+
+* link:rhoas{relfilesuffix}[rhoas]	 - RHOAS CLI
+* link:rhoas_decision_create{relfilesuffix}[rhoas decision create]	 - Create a Decision instance
+* link:rhoas_decision_delete{relfilesuffix}[rhoas decision delete]	 - Delete a Decision instance
+* link:rhoas_decision_describe{relfilesuffix}[rhoas decision describe]	 - View configuration details of an Decision instance
+* link:rhoas_decision_list{relfilesuffix}[rhoas decision list]	 - List all Decision instances
+* link:rhoas_decision_use{relfilesuffix}[rhoas decision use]	 - Set the current Decision instance
+
